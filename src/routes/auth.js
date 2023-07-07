@@ -2,7 +2,7 @@ const express = require('express');
 
 const routes = express.Router();
 const passport = require('passport');
-const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken'); // Will use this when we create the token
 const User = require('../models/User');
 
 routes.get(
@@ -17,14 +17,18 @@ routes.get(
   passport.authenticate('google', { session: false }),
   async (req, res) => {
     const { user } = req;
-    console.log(user);
 
     try {
-      let currentUser = await User.findOne({
+      const currentUser = await User.findOne({
         providerId: user.providerId,
       });
 
       if (currentUser) {
+        /* We need to create the token and push inside the cookie at this point because the user logged in
+           but for now will keep it as comment because we don't have front-end the cookie or the session will
+           hold us back at this point
+        */
+
         // We need to send him directly to his dashboard page
         if (currentUser.role === 'chef') {
           // we will redirect him to the chef dashboard page which is I think the order page
@@ -41,48 +45,37 @@ routes.get(
               'Here we have to have the client dashboard page instead of this message',
           });
         }
+
+        if (currentUser.role === 'user') {
+          // we will redirect him to the chef dashboard page which is I think the order page
+          res.json({
+            message: 'Here we have to redirect the user to decide his role',
+          });
+        }
       }
 
-      if (!currentUser) {
-        const newUser = await User.create({
-          email: user.email,
-          firstname: user.firstname,
-          lastname: user.lastname,
-          provider: user.provider,
-          providerId: user.providerId,
-          profilePicture: user.providerPicture,
-        });
-        currentUser = newUser;
-      }
+      const newUser = await User.create({
+        email: user.email,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        provider: user.provider,
+        providerId: user.providerId,
+        profilePicture: user.providerPicture,
+      });
+      /* We need to create the token and push inside the cookie at this point because the user logged in
+           but for now will keep it as comment because we don't have front-end the cookie or the session will
+           hold us back at this point
+      */
 
-      res.json(currentUser);
+      // After we create the user we need to send him to decide his role
+      res.json({
+        message: 'Here we have to redirect the user to decide his role',
+        newUser,
+      });
     } catch (error) {
       console.log(error);
     }
 
-    // I need to create the token depending on what I need
-
-    // const token = jwt.sign(
-    //   {
-    //     name: user.name,
-    //     email: user.email,
-    //     providerId: `google-${user.providerId}`,
-    //     avatar: user.profilePicture,
-    //   },
-    //   process.env.SECRET_KEY,
-    //   { expiresIn: '14d' }
-    // );
-
-    // I need to specify the configuration for the cookie as well
-
-    // res.cookie('jwt', token, {
-    //   httpOnly: true,
-    //   secure: process.env.NODE_ENV === 'production',
-    //   maxAge: 14 * 24 * 60 * 60 * 1000,
-    // });
-
-    // res.redirect('/');
-    console.log('This the /google/callback route');
     res.end();
   }
 );
