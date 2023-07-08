@@ -15,9 +15,14 @@
     "postinstall": "husky install && husky add .husky/pre-commit \"yarn validate-staged\" && husky add .husky/pre-push \"yarn test\""
   },
   "dependencies": {
+    "body-parser": "^1.20.2",
+    "cookie-parser": "^1.4.6",
     "dotenv": "^14.3.2",
     "express": "^4.17.2",
+    "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.3.1",
+    "passport": "^0.6.0",
+    "passport-google-oauth20": "^2.0.0",
     "yarn-upgrade-all": "^0.6.1"
   },
   "devDependencies": {
