@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 
-// Define the Dish schema
 const dishSchema = new mongoose.Schema({
   // chef:{ type: Schema.Types.ObjectId, ref: 'Chef' },
   name: {
@@ -19,10 +18,11 @@ const dishSchema = new mongoose.Schema({
     type: String,
     required: true,
   }, */
-  rating: String,
+  rating: {
+    type: String,
+  },
 });
 
-// Create a Dish model from the schema
 const Dish = mongoose.model('Dish', dishSchema);
 
 module.exports = Dish;

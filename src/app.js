@@ -10,6 +10,6 @@ const port = process.env.NODE_LOCAL_PORT;
 app.use('/api', apiRoutes);
 
 app.listen(port, () => {
-  // console.log(`Server listening on port ${port}`);
+  console.log(`Server listening on port ${port}`);
   db();
 });

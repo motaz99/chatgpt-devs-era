@@ -5,7 +5,7 @@ const dishController = require('../controllers/dishController');
 
 router.use(express.json());
 
-router.post('/', dishController.createDish); // Create a route for creating a new dish
-router.get('/', dishController.getAllDishes); // Create a route for getting all dishes
+router.post('/', dishController.createDish);
+router.get('/', dishController.getAllDishes);
 
 module.exports = router;
