@@ -1,6 +1,5 @@
-const { sign, verify } = require('jsonwebtoken'); 
+const { sign, verify } = require('jsonwebtoken');
 require('dotenv').config();
-
 
 // creates a JWT token
 const createTokens = (user) => {
@@ -12,25 +11,25 @@ const createTokens = (user) => {
 };
 
 const validateToken = (req, res, next) => {
-
   // checking if any related token is exist
   const accessToken = req.cookies['access-token'];
 
   if (!accessToken)
-    return res.status(400).json({ error: 'User not Authenticated, you need to login.' });
+    res
+      .status(400)
+      .json({ error: 'User not Authenticated, you need to login.' });
 
   try {
-
     // verify the token
     const validToken = verify(accessToken, process.env.JWT_SECRET);
 
     if (validToken) {
       req.authenticated = true;
       req.user = validToken;
-      return next();
+      next();
     }
   } catch (err) {
-    return res.status(400).json({ error: err });
+    res.status(400).json({ error: err });
   }
 };
 
