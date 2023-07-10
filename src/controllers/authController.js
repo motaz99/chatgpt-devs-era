@@ -16,18 +16,18 @@ const login = async (req, res) => {
     if (!isPasswordValid) {
       res.status(401).json({ error: 'Invalid  email or password' });
     }
+    // will comment the create token and the jwt cuz they are broke, we need to fix them from their file.
 
-    const accessToken = createTokens(user);
-
-    res.cookie('access-token', accessToken, {
-      maxAge: 60 * 60 * 24 * 30 * 1000,
-      httpOnly: true,
-    });
+    // const accessToken = createTokens(user);
+    // res.cookie('access-token', accessToken, {
+    //   maxAge: 60 * 60 * 24 * 30 * 1000,
+    //   httpOnly: true,
+    // });
 
     // saving user information for middlewares
     req.user = user;
 
-    res.json('logged in');
+    res.json('you logged in successfully');
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
