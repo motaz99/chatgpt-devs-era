@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const NormalUser = require('../models/normalUser');
+const User = require('../models/User');
 require('dotenv').config();
 const { createTokens } = require('../jwt');
 
@@ -7,7 +7,7 @@ const login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const user = await NormalUser.findOne({ email });
+    const user = await User.findOne({ email });
     if (!user) {
       res.status(401).json({ error: 'Invalid email or password' });
     }
@@ -39,7 +39,7 @@ const signup = async (req, res) => {
 
   try {
     // checking if the user exist
-    const checkUser = await NormalUser.findOne({ email });
+    const checkUser = await User.findOne({ email });
     if (checkUser) {
       res.status(409).json({ error: 'Email is already registered' });
     }
@@ -48,7 +48,7 @@ const signup = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // saving user information to DB
-    const newUser = new NormalUser({
+    const newUser = new User({
       firstname,
       lastname,
       email,
@@ -75,7 +75,7 @@ const passwordReset = async (req, res) => {
   const { email, newPassword } = req.body;
 
   try {
-    const user = await NormalUser.findOne({ email });
+    const user = await User.findOne({ email });
     if (!user) {
       res.status(404).json({ error: 'User not found' });
     }

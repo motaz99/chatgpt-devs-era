@@ -1,13 +1,13 @@
 const express = require('express');
 
 const routes = express.Router();
-const normalAuthRoutes = require('./authRoutes');
-const authRoutes = require('./auth');
-const roleRoutes = require('./role');
-const dishRoutes = require('./dish');
+const authRoutes = require('./authRoutes');
+const googleAuthRoutes = require('./googleAuthRoutes');
+const roleRoutes = require('./roleRoutes');
+const dishRoutes = require('./dishRoutes');
 
+routes.use('/googleAuth', googleAuthRoutes);
 routes.use('/auth', authRoutes);
-routes.use('/normalAuth', normalAuthRoutes);
 routes.use('/role', roleRoutes);
 routes.use('/dish', dishRoutes);
 

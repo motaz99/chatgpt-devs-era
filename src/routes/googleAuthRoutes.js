@@ -3,7 +3,7 @@ const express = require('express');
 const routes = express.Router();
 const passport = require('passport');
 const jwt = require('jsonwebtoken'); // Will use this when we create the token
-const User = require('../models/User');
+const User = require('../models/GoogleUser');
 
 routes.get(
   '/google',
