@@ -53,7 +53,6 @@ routes.get(
           });
         }
       }
-      // const temporaryPassword = generateTemporaryPassword(8);
       const newUser = await User.create({
         firstname: user.firstname,
         lastname: user.lastname,
