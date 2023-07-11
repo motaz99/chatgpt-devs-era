@@ -53,6 +53,10 @@ const signup = async (req, res) => {
       lastname,
       email,
       password: hashedPassword,
+      provider: null,
+      providerId: null,
+      profilePicture: null,
+      type: 'normal-user',
       role,
     });
 

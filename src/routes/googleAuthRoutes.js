@@ -3,7 +3,7 @@ const express = require('express');
 const routes = express.Router();
 const passport = require('passport');
 const jwt = require('jsonwebtoken'); // Will use this when we create the token
-const User = require('../models/GoogleUser');
+const User = require('../models/User');
 
 routes.get(
   '/google',
@@ -53,14 +53,16 @@ routes.get(
           });
         }
       }
-
+      // const temporaryPassword = generateTemporaryPassword(8);
       const newUser = await User.create({
-        email: user.email,
         firstname: user.firstname,
         lastname: user.lastname,
+        email: user.email,
+        password: null,
         provider: user.provider,
         providerId: user.providerId,
         profilePicture: user.providerPicture,
+        type: 'google-user',
       });
       /* We need to create the token and push inside the cookie at this point because the user logged in
            but for now will keep it as comment because we don't have front-end the cookie or the session will

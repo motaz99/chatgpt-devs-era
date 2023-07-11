@@ -1,4 +1,4 @@
-const User = require('../models/GoogleUser');
+const User = require('../models/User');
 
 const decideRole = async (req, res) => {
   try {
