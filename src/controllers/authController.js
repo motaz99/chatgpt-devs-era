@@ -69,7 +69,28 @@ const signup = async (req, res) => {
       role,
     });
 
-    res.status(201).json(newUser);
+    const token = jwt.sign(
+      {
+        firstname: newUser.firstname,
+        lastname: newUser.lastname,
+        email: newUser.email,
+        type: newUser.type,
+        role: newUser.role,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: '14d' }
+    );
+
+    res.cookie('jwt', token, {
+      httpOnly: true,
+      maxAge: 14 * 24 * 60 * 60 * 1000,
+    });
+
+    res.status(201).json({
+      message:
+        'You have signed up successfully, and now you are a logged in user',
+      next: `You now need to fill the ${newUser.role} information`,
+    });
   } catch (error) {
     res.json({ error: error.message });
   }
