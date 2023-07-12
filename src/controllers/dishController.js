@@ -38,3 +38,20 @@ exports.getAllDishes = async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 };
+
+exports.getDishById = async (req, res) => {
+  const dishId = req.body.id;
+
+  try {
+    const dish = await Dish.findById(dishId);
+
+    if (!dish) {
+      res.status(404).json({ error: 'Dish not found' });
+    }
+
+    res.json(dish);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
