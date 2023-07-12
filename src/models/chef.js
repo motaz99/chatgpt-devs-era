@@ -1,32 +1,36 @@
 const mongoose = require('mongoose');
 
-const dishSchema = new mongoose.Schema({
-  // chef:{ type: Schema.Types.ObjectId, ref: 'Chef' },
+const chefSchema = new mongoose.Schema({
   userId: {
     type: String,
     required: true,
   },
-  name: {
+  Restaurant: {
     type: String,
     required: true,
   },
-  description: {
+  Location: {
     type: String,
     required: true,
   },
-  price: {
+  OpeningHours: {
     type: String,
     required: true,
   },
-  /* picture: {
+  ClosingHours: {
     type: String,
     required: true,
-  }, */
-  rating: {
+  },
+  ContactNumber: {
     type: String,
+    required: true,
+  },
+  Description: {
+    type: String,
+    required: true,
   },
 });
 
-const Dish = mongoose.model('Dish', dishSchema);
+const Chef = mongoose.model('Chef', chefSchema);
 
-module.exports = Dish;
+module.exports = Chef;
