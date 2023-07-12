@@ -1,6 +1,6 @@
-const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
+const generateToken = require('../helpers/generateToken');
 require('dotenv').config();
 
 const login = async (req, res) => {
@@ -16,18 +16,8 @@ const login = async (req, res) => {
     if (!isPasswordValid) {
       res.status(401).json({ error: 'Invalid  email or password' });
     }
-    const token = jwt.sign(
-      {
-        firstname: user.firstname,
-        lastname: user.lastname,
-        email: user.email,
-        type: user.type,
-        role: user.role,
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: '14d' }
-    );
 
+    const token = generateToken(user);
     res.cookie('jwt', token, {
       httpOnly: true,
       maxAge: 14 * 24 * 60 * 60 * 1000,
@@ -69,18 +59,7 @@ const signup = async (req, res) => {
       role,
     });
 
-    const token = jwt.sign(
-      {
-        firstname: newUser.firstname,
-        lastname: newUser.lastname,
-        email: newUser.email,
-        type: newUser.type,
-        role: newUser.role,
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: '14d' }
-    );
-
+    const token = generateToken(newUser);
     res.cookie('jwt', token, {
       httpOnly: true,
       maxAge: 14 * 24 * 60 * 60 * 1000,
