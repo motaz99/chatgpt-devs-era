@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
 require('dotenv').config();
@@ -16,18 +17,26 @@ const login = async (req, res) => {
     if (!isPasswordValid) {
       res.status(401).json({ error: 'Invalid  email or password' });
     }
-    // will comment the create token and the jwt cuz they are broke, we need to fix them from their file.
+    const token = jwt.sign(
+      {
+        firstname: user.firstname,
+        lastname: user.lastname,
+        email: user.email,
+        type: user.type,
+        role: user.role,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: '14d' }
+    );
 
-    // const accessToken = createTokens(user);
-    // res.cookie('access-token', accessToken, {
-    //   maxAge: 60 * 60 * 24 * 30 * 1000,
-    //   httpOnly: true,
-    // });
+    res.cookie('jwt', token, {
+      httpOnly: true,
+      maxAge: 14 * 24 * 60 * 60 * 1000,
+    });
 
-    // saving user information for middlewares
-    req.user = user;
-
-    res.json('you logged in successfully');
+    res.json({
+      message: 'you logged in successfully try to do subsequent request',
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
