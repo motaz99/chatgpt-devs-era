@@ -46,17 +46,18 @@ const signup = async (req, res) => {
   const { firstname, lastname, email, password, role } = req.body;
 
   try {
-    // checking if the user exist
-    const checkUser = await User.findOne({ email });
-    if (checkUser) {
-      res.status(409).json({ error: 'Email is already registered' });
+    const user = await User.findOne({ email });
+    if (user) {
+      throw new Error('Email is already registered');
     }
 
-    // checking if the password valid
+    if (!password) {
+      throw new Error('Need to set a password');
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // saving user information to DB
-    const newUser = new User({
+    const newUser = await User.create({
       firstname,
       lastname,
       email,
@@ -68,12 +69,9 @@ const signup = async (req, res) => {
       role,
     });
 
-    const savedUser = await newUser.save();
-
-    res.status(201).json(savedUser);
+    res.status(201).json(newUser);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.json({ error: error.message });
   }
 };
 
