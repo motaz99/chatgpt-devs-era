@@ -3,8 +3,8 @@ const chef = require('../controllers/chefController');
 
 const router = express.Router();
 
-router.post('/', chef.createRestaurant);
-router.get('/me', chef.getRestaurantInfo);
-router.put('/me', chef.editRestaurant);
+router.post('/', chef.createChef);
+router.get('/me', chef.getChefInfo);
+router.put('/me', chef.editChefInfo);
 
 module.exports = router;
