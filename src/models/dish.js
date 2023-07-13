@@ -2,10 +2,10 @@ const mongoose = require('mongoose');
 
 const dishSchema = new mongoose.Schema({
   // chef:{ type: Schema.Types.ObjectId, ref: 'Chef' },
-  userId: {
-    type: String,
-    required: true,
-  },
+  // userId: {
+  //   type: String,
+  //   required: true,
+  // },
   name: {
     type: String,
     required: true,
