@@ -10,7 +10,12 @@ const clientSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  favoriteDishes: [{ type: String }],
+  favoriteDishes: [
+    {
+      dishId: { type: mongoose.Schema.Types.ObjectId, ref: 'Dish' },
+      name: { type: String },
+    },
+  ],
   // orderHistory: [{type: mongoose.Schema.Types.ObjectId, ref: 'Order'}],
   // cart: [{
   //     dish: { type: mongoose.Schema.Types.ObjectId, ref: 'Dish' },

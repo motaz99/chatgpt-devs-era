@@ -1,4 +1,5 @@
 const Client = require('../models/client');
+const Dish = require('../models/dish');
 
 exports.createClient = async (req, res) => {
   try {
@@ -20,7 +21,8 @@ exports.createClient = async (req, res) => {
 
 exports.getClient = async (req, res) => {
   try {
-    const client = await Client.findOne({ user: req.body.userID }); // .populate('user'); getting users info also
+    const clientId = req.body.id;
+    const client = await Client.findById(clientId);
 
     if (!client) {
       res.status(404).json({ error: 'Client not found' });
@@ -34,21 +36,17 @@ exports.getClient = async (req, res) => {
 
 exports.updateClient = async (req, res) => {
   try {
-    const client = await Client.findOne({ user: req.body.userID });
+    const clientId = req.body.id;
+    const client = await Client.findById(clientId);
 
     if (!client) {
       res.status(404).json({ error: 'Client not found' });
     }
 
-    if (client.address !== req.body.address) {
-      client.address = req.body.address;
-    }
+    client.address = req.body.address || client.address;
+    client.contactNumber = req.body.contactNumber || client.contactNumber;
 
-    if (client.contactNumber !== req.body.contactNumber) {
-      client.contactNumber = req.body.contactNumber;
-    }
-
-    if (client.favoriteDishes !== req.body.favoriteDishes) {
+    if (req.body.favoriteDishes && Array.isArray(req.body.favoriteDishes)) {
       client.favoriteDishes = req.body.favoriteDishes;
     }
 
@@ -57,5 +55,70 @@ exports.updateClient = async (req, res) => {
     res.status(200).json(updatedClient);
   } catch (error) {
     res.status(500).json({ error: 'Server error' });
+  }
+};
+
+exports.createFavoriteDish = async (req, res) => {
+  try {
+    const clientId = req.body.id;
+    const client = await Client.findById(clientId);
+
+    if (!client) {
+      res.status(404).json({ error: 'Client not found' });
+    }
+
+    const { dishId } = req.body;
+    const dish = await Dish.findById(dishId);
+
+    if (!dish) {
+      res.status(404).json({ error: 'Dish not found' });
+    }
+
+    const favoriteDish = {
+      id: dish.id,
+      name: dish.name,
+    };
+
+    client.favoriteDishes.push(favoriteDish);
+    await client.save();
+
+    res.status(200).json({ message: 'Favorite dish is added', client });
+  } catch (error) {
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+exports.getFavoriteDishes = async (req, res) => {
+  try {
+    const clientId = req.body.id;
+    const client = await Client.findById(clientId);
+
+    if (!client) {
+      res.status(404).json({ error: 'Client not found' });
+    }
+
+    const { favoriteDishes } = client;
+    res.status(200).json({ favoriteDishes });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+exports.deleteFavoriteDish = async (req, res) => {
+  try {
+    const clientId = req.body.id;
+    const client = await Client.findById(clientId);
+
+    if (!client) {
+      res.status(404).json({ error: 'Client not found' });
+    }
+
+    const dishId = req.params.id;
+    client.favoriteDishes.pull(dishId);
+    await client.save();
+
+    res.status(200).json({ message: 'Favorite dish is deleted' });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
