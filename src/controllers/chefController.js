@@ -2,39 +2,39 @@ const Chef = require('../models/chef');
 
 exports.createRestaurant = async (req, res) => {
   const {
-    Restaurant,
-    Location,
-    OpeningHours,
-    ClosingHours,
-    ContactNumber,
-    Description,
+    restaurant,
+    location,
+    openingHours,
+    closingHours,
+    contactNumber,
+    description,
   } = req.body;
 
   try {
     if (
-      !Restaurant &&
-      !Location &&
-      !OpeningHours &&
-      !ClosingHours &&
-      !ContactNumber &&
-      !Description
+      !restaurant &&
+      !location &&
+      !openingHours &&
+      !closingHours &&
+      !contactNumber &&
+      !description
     ) {
       throw new Error('Incomplete information...');
     }
 
-    const checkRestaurant = await Chef.findOne({ Restaurant });
+    const checkRestaurant = await Chef.findOne({ restaurant });
     if (checkRestaurant) {
       throw new Error('Restaurant already exists.');
     }
 
     const newRestaurant = new Chef({
       userId: req.session.userId,
-      Restaurant,
-      Location,
-      OpeningHours,
-      ClosingHours,
-      ContactNumber,
-      Description,
+      restaurant,
+      location,
+      openingHours,
+      closingHours,
+      contactNumber,
+      description,
     });
 
     await newRestaurant.save();
@@ -67,22 +67,22 @@ exports.getRestaurantInfo = async (req, res) => {
 exports.editRestaurant = async (req, res) => {
   const id = req.session.userId;
   const {
-    Restaurant,
-    Location,
-    OpeningHours,
-    ClosingHours,
-    ContactNumber,
-    Description,
+    restaurant,
+    location,
+    openingHours,
+    closingHours,
+    contactNumber,
+    description,
   } = req.body;
 
   try {
     if (
-      !Restaurant &&
-      !Location &&
-      !OpeningHours &&
-      !ClosingHours &&
-      !ContactNumber &&
-      !Description
+      !restaurant &&
+      !location &&
+      !openingHours &&
+      !closingHours &&
+      !contactNumber &&
+      !description
     ) {
       throw new Error('Incomplete information...');
     }
@@ -92,12 +92,12 @@ exports.editRestaurant = async (req, res) => {
       throw new Error('Restaurant does not exist');
     }
 
-    checkRestaurant.Restaurant = Restaurant;
-    checkRestaurant.Location = Location;
-    checkRestaurant.OpeningHours = OpeningHours;
-    checkRestaurant.ClosingHours = ClosingHours;
-    checkRestaurant.ContactNumber = ContactNumber;
-    checkRestaurant.Description = Description;
+    checkRestaurant.restaurant = restaurant;
+    checkRestaurant.location = location;
+    checkRestaurant.openingHours = openingHours;
+    checkRestaurant.closingHours = closingHours;
+    checkRestaurant.contactNumber = contactNumber;
+    checkRestaurant.description = description;
 
     const savedRestaurant = await checkRestaurant.save();
 

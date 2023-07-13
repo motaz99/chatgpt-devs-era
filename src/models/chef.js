@@ -5,27 +5,27 @@ const chefSchema = new mongoose.Schema({
   //   type: String,
   //   required: true,
   // },
-  Restaurant: {
+  restaurant: {
     type: String,
     required: true,
   },
-  Location: {
+  location: {
     type: String,
     required: true,
   },
-  OpeningHours: {
+  openingHours: {
     type: String,
     required: true,
   },
-  ClosingHours: {
+  closingHours: {
     type: String,
     required: true,
   },
-  ContactNumber: {
+  contactNumber: {
     type: String,
     required: true,
   },
-  Description: {
+  description: {
     type: String,
     required: true,
   },
