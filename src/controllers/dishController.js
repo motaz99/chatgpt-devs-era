@@ -3,6 +3,8 @@ const Dish = require('../models/dish');
 
 // Create a new dish
 exports.createDish = async (req, res) => {
+  // we need to get an id as an authorized user
+  // const id = req.
   const { name, description, price, rating } = req.body;
   try {
     const checkDish = await Dish.findOne({ name });
@@ -12,10 +14,11 @@ exports.createDish = async (req, res) => {
 
     // Create a new dish object
     const newDish = new Dish({
-      userId: req.session.userId,
+      // chef: id,
       name,
       description,
       price,
+      /* picture, */
       rating,
     });
 
@@ -40,20 +43,5 @@ exports.getAllDishes = async (req, res) => {
   } catch (error) {
     // Handle server error
     res.status(500).json({ error: 'Internal server error' });
-  }
-};
-
-// get a dish
-exports.getDish = async (req, res) => {
-  const { id } = req.body;
-  try {
-    const checkDish = await Dish.findOne({ userId: id });
-    if (!checkDish) {
-      throw new Error('Dish does not exist...');
-    }
-
-    res.status(200).json({ dish: checkDish });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
   }
 };

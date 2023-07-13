@@ -1,4 +1,3 @@
-const session = require('express-session');
 const express = require('express');
 require('dotenv').config();
 const passport = require('passport');
@@ -9,13 +8,6 @@ const db = require('./db');
 const apiRoutes = require('./routes');
 
 const app = express();
-app.use(
-  session({
-    secret: 'secretKey',
-    resave: true,
-    saveUninitialized: true,
-  })
-);
 
 app.use(passport.initialize());
 app.use(express.json());

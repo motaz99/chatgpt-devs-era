@@ -1,6 +1,8 @@
 const Chef = require('../models/chef');
 
-exports.createRestaurant = async (req, res) => {
+exports.createChef = async (req, res) => {
+  // we need to get an id as an authorized user
+  // const id = req.
   const {
     restaurant,
     location,
@@ -11,24 +13,13 @@ exports.createRestaurant = async (req, res) => {
   } = req.body;
 
   try {
-    if (
-      !restaurant &&
-      !location &&
-      !openingHours &&
-      !closingHours &&
-      !contactNumber &&
-      !description
-    ) {
-      throw new Error('Incomplete information...');
+    const checkChef = await Chef.findOne({ restaurant });
+    if (checkChef) {
+      throw new Error('Chef already exists.');
     }
 
-    const checkRestaurant = await Chef.findOne({ restaurant });
-    if (checkRestaurant) {
-      throw new Error('Restaurant already exists.');
-    }
-
-    const newRestaurant = new Chef({
-      userId: req.session.userId,
+    const newChef = new Chef({
+      // chef: id,
       restaurant,
       location,
       openingHours,
@@ -37,35 +28,36 @@ exports.createRestaurant = async (req, res) => {
       description,
     });
 
-    await newRestaurant.save();
+    await newChef.save();
 
-    res.status(201).json('Restaurant created successfully');
+    res.status(201).json('Chef created successfully');
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-// Get the restaurant info
-exports.getRestaurantInfo = async (req, res) => {
-  const id = req.session.userId;
+// Get the Chef info
+exports.getChefInfo = async (req, res) => {
+  // we need to get chef's id value here
+  const id = '64affcdef920783b12423498';
 
   try {
-    const restaurant = await Chef.findOne({ userId: id });
-    if (!restaurant) {
-      throw new Error(
-        'Restaurant does not exist. You need to create your restaurant.'
-      );
+    const checkChef = await Chef.findOne({ userId: id });
+    if (!checkChef) {
+      throw new Error('Chef does not exist. You need to create your Chef.');
     }
 
-    res.status(200).json({ restaurant });
+    res.status(200).json({ checkChef });
   } catch (error) {
     res.status(500).json({ error: 'Server error' });
   }
 };
 
-// Edit the restaurant info
-exports.editRestaurant = async (req, res) => {
-  const id = req.session.userId;
+// Edit the chef's info
+exports.editChefInfo = async (req, res) => {
+  // we need to get chef's id value here
+  const id = '64affcdef920783b12423498';
+
   const {
     restaurant,
     location,
@@ -76,32 +68,21 @@ exports.editRestaurant = async (req, res) => {
   } = req.body;
 
   try {
-    if (
-      !restaurant &&
-      !location &&
-      !openingHours &&
-      !closingHours &&
-      !contactNumber &&
-      !description
-    ) {
-      throw new Error('Incomplete information...');
+    const checkChef = await Chef.findOne({ chef: id });
+    if (!checkChef) {
+      throw new Error('Chef does not exist');
     }
 
-    const checkRestaurant = await Chef.findOne({ userId: id });
-    if (!checkRestaurant) {
-      throw new Error('Restaurant does not exist');
-    }
+    checkChef.restaurant = restaurant;
+    checkChef.location = location;
+    checkChef.openingHours = openingHours;
+    checkChef.closingHours = closingHours;
+    checkChef.contactNumber = contactNumber;
+    checkChef.description = description;
 
-    checkRestaurant.restaurant = restaurant;
-    checkRestaurant.location = location;
-    checkRestaurant.openingHours = openingHours;
-    checkRestaurant.closingHours = closingHours;
-    checkRestaurant.contactNumber = contactNumber;
-    checkRestaurant.description = description;
+    const savedChef = await checkChef.save();
 
-    const savedRestaurant = await checkRestaurant.save();
-
-    res.status(201).json({ savedRestaurant });
+    res.status(201).json({ savedChef });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
