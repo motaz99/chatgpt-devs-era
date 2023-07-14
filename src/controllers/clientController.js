@@ -5,6 +5,12 @@ exports.createClient = async (req, res) => {
   try {
     const { user, address, contactNumber } = req.body;
 
+    const existingClient = await Client.findOne({ user });
+
+    if (existingClient) {
+      return res.status(400).json({ error: 'Client already exists' });
+    }
+
     const client = new Client({
       user,
       address,
@@ -13,9 +19,9 @@ exports.createClient = async (req, res) => {
 
     const createdClient = await client.save();
 
-    res.status(201).json(createdClient);
+    return res.status(201).json(createdClient);
   } catch (error) {
-    res.status(500).json({ error: 'Server error' });
+    return res.status(500).json({ error: 'Server error' });
   }
 };
 
@@ -25,7 +31,7 @@ exports.getClient = async (req, res) => {
     const client = await Client.findById(clientId);
 
     if (!client) {
-      res.status(404).json({ error: 'Client not found' });
+      res.status(400).json({ error: 'Client not found' });
     }
 
     res.status(200).json(client);
@@ -45,10 +51,6 @@ exports.updateClient = async (req, res) => {
 
     client.address = req.body.address || client.address;
     client.contactNumber = req.body.contactNumber || client.contactNumber;
-
-    if (req.body.favoriteDishes && Array.isArray(req.body.favoriteDishes)) {
-      client.favoriteDishes = req.body.favoriteDishes;
-    }
 
     const updatedClient = await client.save();
 
