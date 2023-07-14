@@ -40,7 +40,7 @@ exports.getAllDishes = async (req, res) => {
 };
 
 exports.getDishById = async (req, res) => {
-  const dishId = req.body.id;
+  const dishId = req.params.id;
 
   try {
     const dish = await Dish.findById(dishId);
