@@ -1,12 +1,12 @@
 const bcrypt = require('bcrypt');
-const NormalUser = require('../models/normalUser');
+const User = require('../models/User');
 require('dotenv').config();
 
 const login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const user = await NormalUser.findOne({ email });
+    const user = await User.findOne({ email });
     if (!user) {
       res.status(401).json({ error: 'Invalid email or password' });
     }
@@ -48,6 +48,10 @@ const signup = async (req, res) => {
       lastname,
       email,
       password: hashedPassword,
+      provider: null,
+      providerId: null,
+      profilePicture: null,
+      type: 'normal-user',
       role,
     });
 
@@ -69,7 +73,7 @@ const passwordReset = async (req, res) => {
   const { email, newPassword } = req.body;
 
   try {
-    const user = await NormalUser.findOne({ email });
+    const user = await User.findOne({ email });
     if (!user) {
       res.status(404).json({ error: 'User not found' });
     }
