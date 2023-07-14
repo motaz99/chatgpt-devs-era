@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
+const generateToken = require('../helpers/generateToken');
 require('dotenv').config();
 
 const login = async (req, res) => {
@@ -15,19 +16,16 @@ const login = async (req, res) => {
     if (!isPasswordValid) {
       res.status(401).json({ error: 'Invalid  email or password' });
     }
-    // will comment the create token and the jwt cuz they are broke, we need to fix them from their file.
 
-    // const accessToken = createTokens(user);
-    // res.cookie('access-token', accessToken, {
-    //   maxAge: 60 * 60 * 24 * 30 * 1000,
-    //   httpOnly: true,
-    // });
+    const token = generateToken(user);
+    res.cookie('jwt', token, {
+      httpOnly: true,
+      maxAge: 14 * 24 * 60 * 60 * 1000,
+    });
 
-    // saving user information for middlewares
-
-    req.session.userId = user.id;
-
-    res.json('you logged in successfully');
+    res.json({
+      message: 'you logged in successfully try to do subsequent request',
+    });
   } catch (error) {
     res.status(500).json({ error: 'Internal Server Error' });
   }
@@ -37,13 +35,18 @@ const signup = async (req, res) => {
   const { firstname, lastname, email, password, role } = req.body;
 
   try {
-    const checkUser = await NormalUser.findOne({ email });
-    if (checkUser) {
-      res.status(409).json({ error: 'Email is already registered' });
+    const user = await User.findOne({ email });
+    if (user) {
+      throw new Error('Email is already registered');
+    }
+
+    if (!password) {
+      throw new Error('Need to set a password');
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new NormalUser({
+
+    const newUser = await User.create({
       firstname,
       lastname,
       email,
@@ -55,11 +58,19 @@ const signup = async (req, res) => {
       role,
     });
 
-    const savedUser = await newUser.save();
+    const token = generateToken(newUser);
+    res.cookie('jwt', token, {
+      httpOnly: true,
+      maxAge: 14 * 24 * 60 * 60 * 1000,
+    });
 
-    res.status(201).json(savedUser);
+    res.status(201).json({
+      message:
+        'You have signed up successfully, and now you are a logged in user',
+      next: `You now need to fill the ${newUser.role} information`,
+    });
   } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.json({ error: error.message });
   }
 };
 
