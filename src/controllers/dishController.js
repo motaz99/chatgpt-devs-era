@@ -22,9 +22,9 @@ exports.createDish = async (req, res) => {
     const savedDish = await newDish.save();
 
     res.status(201).json(savedDish);
-      } catch (error) {
-        res.status(500).json({ error: 'Internal server error' });
-      }
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
 };
 
 exports.getAllDishes = async (req, res) => {
