@@ -1,7 +1,6 @@
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
 require('dotenv').config();
-const { createTokens } = require('../jwt');
 
 const login = async (req, res) => {
   const { email, password } = req.body;
@@ -25,11 +24,11 @@ const login = async (req, res) => {
     // });
 
     // saving user information for middlewares
-    req.user = user;
+
+    req.session.userId = user.id;
 
     res.json('you logged in successfully');
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
@@ -38,17 +37,13 @@ const signup = async (req, res) => {
   const { firstname, lastname, email, password, role } = req.body;
 
   try {
-    // checking if the user exist
-    const checkUser = await User.findOne({ email });
+    const checkUser = await NormalUser.findOne({ email });
     if (checkUser) {
       res.status(409).json({ error: 'Email is already registered' });
     }
 
-    // checking if the password valid
     const hashedPassword = await bcrypt.hash(password, 10);
-
-    // saving user information to DB
-    const newUser = new User({
+    const newUser = new NormalUser({
       firstname,
       lastname,
       email,
@@ -64,7 +59,6 @@ const signup = async (req, res) => {
 
     res.status(201).json(savedUser);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
@@ -92,7 +86,6 @@ const passwordReset = async (req, res) => {
 
     res.json({ message: 'Password reset successful' });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
