@@ -27,7 +27,8 @@ const login = async (req, res) => {
       message: 'you logged in successfully try to do subsequent request',
     });
   } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error(error);
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -44,6 +45,7 @@ const signup = async (req, res) => {
       throw new Error('Need to set a password');
     }
 
+    // checking if the password valid
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = await User.create({
@@ -51,10 +53,6 @@ const signup = async (req, res) => {
       lastname,
       email,
       password: hashedPassword,
-      provider: null,
-      providerId: null,
-      profilePicture: null,
-      type: 'normal-user',
       role,
     });
 
@@ -97,6 +95,7 @@ const passwordReset = async (req, res) => {
 
     res.json({ message: 'Password reset successful' });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
