@@ -1,8 +1,8 @@
+const decodeJwtToken = require('../helpers/decodeJwtToken');
+
 const Chef = require('../models/chef');
 
 exports.createChef = async (req, res) => {
-  // we need to get an id as an authorized user
-  // const id = req.
   const {
     restaurant,
     location,
@@ -12,14 +12,16 @@ exports.createChef = async (req, res) => {
     description,
   } = req.body;
 
+  const token = req.cookies.jwt;
+  const decodedToken = decodeJwtToken(token);
+
   try {
     const checkChef = await Chef.findOne({ restaurant });
     if (checkChef) {
       throw new Error('Chef already exists.');
     }
-
     const newChef = new Chef({
-      // chef: id,
+      userId: decodedToken.userId,
       restaurant,
       location,
       openingHours,
