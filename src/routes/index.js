@@ -12,8 +12,8 @@ const orderRoutes = require('./order');
 routes.use('/googleAuth', googleAuthRoutes);
 routes.use('/auth', authRoutes);
 routes.use('/role', verifyUser, roleRoutes);
-routes.use('/chef', chefRoutes);
-routes.use('/clients', clientRoutes);
-routes.use('/orders', orderRoutes);
+routes.use('/chef', verifyUser, chefRoutes);
+routes.use('/clients', verifyUser, clientRoutes);
+routes.use('/orders', verifyUser, orderRoutes);
 
 module.exports = routes;
