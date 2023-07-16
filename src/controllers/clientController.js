@@ -1,5 +1,6 @@
 const Client = require('../models/client');
 const Dish = require('../models/dish');
+const Chef = require('../models/chef');
 
 exports.createClient = async (req, res) => {
   try {
@@ -122,5 +123,21 @@ exports.deleteFavoriteDish = async (req, res) => {
     res.status(200).json({ message: 'Favorite dish is deleted' });
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+};
+
+exports.getChefs = async (req, res) => {
+  try {
+    const chefs = await Chef.find();
+
+    if (chefs.length === 0) {
+      res.json({ message: 'No chefs available yet' });
+    }
+
+    res.status(200).json(chefs);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: `Error while retrieving chefs: ${error.message}` });
   }
 };

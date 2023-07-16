@@ -23,9 +23,16 @@ const login = async (req, res) => {
       maxAge: 14 * 24 * 60 * 60 * 1000,
     });
 
-    res.json({
-      message: 'you logged in successfully try to do subsequent request',
-    });
+    if (user.role === 'client') {
+      res.redirect('/api/clients/chefs');
+    }
+
+    if (user.role === 'chef') {
+      // No we are just showing a message but later we complete the login flow we should replace this response with chef real info
+      res.json({
+        message: 'The orders that related to the chef should be show',
+      });
+    }
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
