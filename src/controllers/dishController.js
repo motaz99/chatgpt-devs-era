@@ -23,7 +23,7 @@ exports.createDish = async (req, res) => {
 
     res.status(201).json(savedDish);
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -31,7 +31,6 @@ exports.getAllDishes = async (req, res) => {
   try {
     const dishes = await Dish.find();
 
-    // Send the array of dishes as a response
     res.json({ dishes });
   } catch (error) {
     res.status(500).json({ error: 'Internal server error' });
@@ -45,12 +44,11 @@ exports.getDishById = async (req, res) => {
     const dish = await Dish.findById(dishId);
 
     if (!dish) {
-      res.status(404).json({ error: 'Dish not found' });
+      throw new Error('Dish not found');
     }
 
     res.json(dish);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Server error' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };

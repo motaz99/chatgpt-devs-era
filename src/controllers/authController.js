@@ -9,12 +9,12 @@ const login = async (req, res) => {
   try {
     const user = await User.findOne({ email });
     if (!user) {
-      res.status(401).json({ error: 'Invalid email or password' });
+      throw new Error('Invalid email or password');
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      res.status(401).json({ error: 'Invalid  email or password' });
+      throw new Error('Invalid email or password');
     }
 
     const token = generateToken(user);
@@ -27,7 +27,6 @@ const login = async (req, res) => {
       message: 'you logged in successfully try to do subsequent request',
     });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -84,7 +83,7 @@ const passwordReset = async (req, res) => {
   try {
     const user = await User.findOne({ email });
     if (!user) {
-      res.status(404).json({ error: 'User not found' });
+      throw new Error('User not found');
     }
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
@@ -95,8 +94,7 @@ const passwordReset = async (req, res) => {
 
     res.json({ message: 'Password reset successful' });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: error.message });
   }
 };
 

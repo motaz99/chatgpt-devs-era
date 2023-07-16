@@ -8,7 +8,7 @@ exports.createClient = async (req, res) => {
     const existingClient = await Client.findOne({ user });
 
     if (existingClient) {
-      return res.status(400).json({ error: 'Client already exists' });
+      throw new Error('Client already exists');
     }
 
     const client = new Client({
@@ -21,7 +21,7 @@ exports.createClient = async (req, res) => {
 
     return res.status(201).json(createdClient);
   } catch (error) {
-    return res.status(500).json({ error: 'Server error' });
+    return res.status(500).json({ error: error.message });
   }
 };
 
@@ -31,12 +31,12 @@ exports.getClient = async (req, res) => {
     const client = await Client.findById(clientId);
 
     if (!client) {
-      res.status(400).json({ error: 'Client not found' });
+      throw new Error('Client not found');
     }
 
     res.status(200).json(client);
   } catch (error) {
-    res.status(500).json({ error: 'Server error' });
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -46,7 +46,7 @@ exports.updateClient = async (req, res) => {
     const client = await Client.findById(clientId);
 
     if (!client) {
-      res.status(404).json({ error: 'Client not found' });
+      throw new Error('Client not found');
     }
 
     client.address = req.body.address || client.address;
@@ -66,14 +66,14 @@ exports.createFavoriteDish = async (req, res) => {
     const client = await Client.findById(clientId);
 
     if (!client) {
-      res.status(404).json({ error: 'Client not found' });
+      throw new Error('Client not found');
     }
 
     const { dishId } = req.body;
     const dish = await Dish.findById(dishId);
 
     if (!dish) {
-      res.status(404).json({ error: 'Dish not found' });
+      throw new Error('Dish not found');
     }
 
     const favoriteDish = {
@@ -86,7 +86,7 @@ exports.createFavoriteDish = async (req, res) => {
 
     res.status(200).json({ message: 'Favorite dish is added', client });
   } catch (error) {
-    res.status(500).json({ error: 'Server error' });
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -96,13 +96,13 @@ exports.getFavoriteDishes = async (req, res) => {
     const client = await Client.findById(clientId);
 
     if (!client) {
-      res.status(404).json({ error: 'Client not found' });
+      throw new Error('Client not found');
     }
 
     const { favoriteDishes } = client;
     res.status(200).json({ favoriteDishes });
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -112,7 +112,7 @@ exports.deleteFavoriteDish = async (req, res) => {
     const client = await Client.findById(clientId);
 
     if (!client) {
-      res.status(404).json({ error: 'Client not found' });
+      throw new Error('Client not found');
     }
 
     const dishId = req.params.id;
@@ -121,6 +121,6 @@ exports.deleteFavoriteDish = async (req, res) => {
 
     res.status(200).json({ message: 'Favorite dish is deleted' });
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: error.message });
   }
 };
