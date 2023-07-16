@@ -53,36 +53,22 @@ exports.getChefInfo = async (req, res) => {
   }
 };
 
-// Edit the chef's info
 exports.editChefInfo = async (req, res) => {
-  // we need to get chef's id value here
-  const id = '64affcdef920783b12423498';
-
-  const {
-    restaurant,
-    location,
-    openingHours,
-    closingHours,
-    contactNumber,
-    description,
-  } = req.body;
+  const token = req.cookies.jwt;
+  const decodedToken = decodeJwtToken(token);
 
   try {
-    const checkChef = await Chef.findOne({ chef: id });
-    if (!checkChef) {
+    const updatedChef = await Chef.findOneAndUpdate(
+      { userId: decodedToken.userId },
+      req.body,
+      { new: true }
+    );
+
+    if (!updatedChef) {
       throw new Error('Chef does not exist');
     }
 
-    checkChef.restaurant = restaurant;
-    checkChef.location = location;
-    checkChef.openingHours = openingHours;
-    checkChef.closingHours = closingHours;
-    checkChef.contactNumber = contactNumber;
-    checkChef.description = description;
-
-    const savedChef = await checkChef.save();
-
-    res.status(201).json({ savedChef });
+    res.status(201).json({ chef: updatedChef });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
