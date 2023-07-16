@@ -40,16 +40,16 @@ exports.createChef = async (req, res) => {
 
 // Get the Chef info
 exports.getChefInfo = async (req, res) => {
-  // we need to get chef's id value here
-  const id = '64affcdef920783b12423498';
+  const token = req.cookies.jwt;
+  const decodedToken = decodeJwtToken(token);
 
   try {
-    const checkChef = await Chef.findOne({ userId: id });
-    if (!checkChef) {
+    const chef = await Chef.findOne({ userId: decodedToken });
+    if (!chef) {
       throw new Error('Chef does not exist. You need to create your Chef.');
     }
 
-    res.status(200).json({ checkChef });
+    res.status(200).json({ chef });
   } catch (error) {
     res.status(500).json({ error: 'Server error' });
   }
