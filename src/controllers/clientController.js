@@ -30,8 +30,9 @@ exports.createClient = async (req, res) => {
 
 exports.getClient = async (req, res) => {
   try {
-    const clientId = req.body.id;
-    const client = await Client.findById(clientId);
+    const token = req.cookies.jwt;
+    const decodedToken = decodeJwtToken(token);
+    const client = await Client.findOne({ userId: decodedToken.userId });
 
     if (!client) {
       throw new Error('Client not found');
