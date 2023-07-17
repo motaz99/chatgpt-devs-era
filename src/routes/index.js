@@ -7,7 +7,7 @@ const googleAuthRoutes = require('./googleAuthRoutes');
 const roleRoutes = require('./roleRoutes');
 const verifyUser = require('../middlewares/verifyUser');
 const chefRoutes = require('./chefRoutes');
-const orderRoutes = require('./order');
+const orderRoutes = require('./orderRoutes');
 
 routes.use('/googleAuth', googleAuthRoutes);
 routes.use('/auth', authRoutes);
