@@ -46,17 +46,18 @@ exports.getClient = async (req, res) => {
 
 exports.updateClient = async (req, res) => {
   try {
-    const clientId = req.body.id;
-    const client = await Client.findById(clientId);
+    const token = req.cookies.jwt;
+    const decodedToken = decodeJwtToken(token);
 
-    if (!client) {
+    const updatedClient = await Client.findOneAndUpdate(
+      { userId: decodedToken.userId },
+      req.body,
+      { new: true }
+    );
+
+    if (!updatedClient) {
       throw new Error('Client not found');
     }
-
-    client.address = req.body.address || client.address;
-    client.contactNumber = req.body.contactNumber || client.contactNumber;
-
-    const updatedClient = await client.save();
 
     res.status(200).json(updatedClient);
   } catch (error) {
