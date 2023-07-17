@@ -67,8 +67,9 @@ exports.updateClient = async (req, res) => {
 
 exports.createFavoriteDish = async (req, res) => {
   try {
-    const clientId = req.body.id;
-    const client = await Client.findById(clientId);
+    const token = req.cookies.jwt;
+    const decodedToken = decodeJwtToken(token);
+    const client = await Client.findOne({ userId: decodedToken.userId });
 
     if (!client) {
       throw new Error('Client not found');
@@ -82,7 +83,7 @@ exports.createFavoriteDish = async (req, res) => {
     }
 
     const favoriteDish = {
-      id: dish.id,
+      dishId: dish.id,
       name: dish.name,
     };
 
@@ -97,8 +98,9 @@ exports.createFavoriteDish = async (req, res) => {
 
 exports.getFavoriteDishes = async (req, res) => {
   try {
-    const clientId = req.body.id;
-    const client = await Client.findById(clientId);
+    const token = req.cookies.jwt;
+    const decodedToken = decodeJwtToken(token);
+    const client = await Client.findOne({ userId: decodedToken.userId });
 
     if (!client) {
       throw new Error('Client not found');
@@ -112,9 +114,11 @@ exports.getFavoriteDishes = async (req, res) => {
 };
 
 exports.deleteFavoriteDish = async (req, res) => {
+  // Delete a favorite dish now is broken but for now it uses the userId from the jwt token
   try {
-    const clientId = req.body.id;
-    const client = await Client.findById(clientId);
+    const token = req.cookies.jwt;
+    const decodedToken = decodeJwtToken(token);
+    const client = await Client.findOne({ userId: decodedToken.userId });
 
     if (!client) {
       throw new Error('Client not found');
