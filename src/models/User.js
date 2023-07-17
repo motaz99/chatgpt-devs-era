@@ -22,7 +22,6 @@ const userSchema = new mongoose.Schema({
   },
   providerId: {
     type: String,
-    unique: true,
   },
   profilePicture: {
     type: String,

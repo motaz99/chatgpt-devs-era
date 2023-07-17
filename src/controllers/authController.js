@@ -9,12 +9,12 @@ const login = async (req, res) => {
   try {
     const user = await User.findOne({ email });
     if (!user) {
-      res.status(401).json({ error: 'Invalid email or password' });
+      throw new Error('Invalid email or password');
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      res.status(401).json({ error: 'Invalid  email or password' });
+      throw new Error('Invalid email or password');
     }
 
     const token = generateToken(user);
@@ -23,11 +23,17 @@ const login = async (req, res) => {
       maxAge: 14 * 24 * 60 * 60 * 1000,
     });
 
-    res.json({
-      message: 'you logged in successfully try to do subsequent request',
-    });
+    if (user.role === 'client') {
+      res.redirect('/api/clients/chefs');
+    }
+
+    if (user.role === 'chef') {
+      // No we are just showing a message but later we complete the login flow we should replace this response with chef real info
+      res.json({
+        message: 'The orders that related to the chef should be show',
+      });
+    }
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -52,10 +58,13 @@ const signup = async (req, res) => {
       firstname,
       lastname,
       email,
+      provider: null,
+      providerId: null,
+      profilePicture: null,
       password: hashedPassword,
+      type: 'normal-user',
       role,
     });
-
     const token = generateToken(newUser);
     res.cookie('jwt', token, {
       httpOnly: true,
@@ -84,7 +93,7 @@ const passwordReset = async (req, res) => {
   try {
     const user = await User.findOne({ email });
     if (!user) {
-      res.status(404).json({ error: 'User not found' });
+      throw new Error('User not found');
     }
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
@@ -95,8 +104,7 @@ const passwordReset = async (req, res) => {
 
     res.json({ message: 'Password reset successful' });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: error.message });
   }
 };
 

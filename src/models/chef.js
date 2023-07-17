@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const chefSchema = new mongoose.Schema({
-  // chef: { type: Schema.Types.ObjectId, ref: 'Chef' },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   restaurant: {
     type: String,
     required: true,

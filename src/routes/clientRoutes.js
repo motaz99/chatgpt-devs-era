@@ -9,5 +9,6 @@ router.put('/me', clientController.updateClient);
 router.post('/me/favorite-dishes', clientController.createFavoriteDish);
 router.get('/me/favorite-dishes', clientController.getFavoriteDishes);
 router.delete('/me/favorite-dishes/:id', clientController.deleteFavoriteDish);
+router.get('/chefs', clientController.getChefs);
 
 module.exports = router;

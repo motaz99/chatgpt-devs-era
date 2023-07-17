@@ -1,8 +1,10 @@
+const decodeJwtToken = require('../helpers/decodeJwtToken');
+const Chef = require('../models/chef');
 const Dish = require('../models/dish');
 
 exports.createDish = async (req, res) => {
-  // we need to get an id as an authorized user
-  // const id = req.
+  const token = req.cookies.jwt;
+  const decodedToken = decodeJwtToken(token);
   const { name, description, price, rating } = req.body;
   try {
     const checkDish = await Dish.findOne({ name });
@@ -10,8 +12,11 @@ exports.createDish = async (req, res) => {
       throw new Error('Dish already exists...');
     }
 
+    const chef = await Chef.findOne({ userId: decodedToken.userId });
+
     const newDish = new Dish({
-      // chef: id,
+      chefId: chef._id,
+      userId: decodedToken.userId,
       name,
       description,
       price,
@@ -23,15 +28,17 @@ exports.createDish = async (req, res) => {
 
     res.status(201).json(savedDish);
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: error.message });
   }
 };
 
 exports.getAllDishes = async (req, res) => {
   try {
-    const dishes = await Dish.find();
+    const token = req.cookies.jwt;
+    const decodedToken = decodeJwtToken(token);
 
-    // Send the array of dishes as a response
+    const dishes = await Dish.find({ userId: decodedToken.userId });
+
     res.json({ dishes });
   } catch (error) {
     res.status(500).json({ error: 'Internal server error' });
@@ -45,12 +52,11 @@ exports.getDishById = async (req, res) => {
     const dish = await Dish.findById(dishId);
 
     if (!dish) {
-      res.status(404).json({ error: 'Dish not found' });
+      throw new Error('Dish not found');
     }
 
     res.json(dish);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Server error' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };

@@ -1,8 +1,8 @@
+const decodeJwtToken = require('../helpers/decodeJwtToken');
+
 const Chef = require('../models/chef');
 
 exports.createChef = async (req, res) => {
-  // we need to get an id as an authorized user
-  // const id = req.
   const {
     restaurant,
     location,
@@ -12,14 +12,16 @@ exports.createChef = async (req, res) => {
     description,
   } = req.body;
 
+  const token = req.cookies.jwt;
+  const decodedToken = decodeJwtToken(token);
+
   try {
     const checkChef = await Chef.findOne({ restaurant });
     if (checkChef) {
       throw new Error('Chef already exists.');
     }
-
-    const newChef = new Chef({
-      // chef: id,
+    await Chef.create({
+      userId: decodedToken.userId,
       restaurant,
       location,
       openingHours,
@@ -28,61 +30,43 @@ exports.createChef = async (req, res) => {
       description,
     });
 
-    await newChef.save();
-
     res.status(201).json('Chef created successfully');
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-// Get the Chef info
 exports.getChefInfo = async (req, res) => {
-  // we need to get chef's id value here
-  const id = '64affcdef920783b12423498';
-
+  const token = req.cookies.jwt;
+  const decodedToken = decodeJwtToken(token);
   try {
-    const checkChef = await Chef.findOne({ userId: id });
-    if (!checkChef) {
+    const chef = await Chef.findOne({ userId: decodedToken.userId });
+    if (!chef) {
       throw new Error('Chef does not exist. You need to create your Chef.');
     }
 
-    res.status(200).json({ checkChef });
+    res.status(200).json({ chef });
   } catch (error) {
-    res.status(500).json({ error: 'Server error' });
+    res.status(500).json({ error: 'Server error', message: error.message });
   }
 };
 
-// Edit the chef's info
 exports.editChefInfo = async (req, res) => {
-  // we need to get chef's id value here
-  const id = '64affcdef920783b12423498';
-
-  const {
-    restaurant,
-    location,
-    openingHours,
-    closingHours,
-    contactNumber,
-    description,
-  } = req.body;
+  const token = req.cookies.jwt;
+  const decodedToken = decodeJwtToken(token);
 
   try {
-    const checkChef = await Chef.findOne({ chef: id });
-    if (!checkChef) {
+    const updatedChef = await Chef.findOneAndUpdate(
+      { userId: decodedToken.userId },
+      req.body,
+      { new: true }
+    );
+
+    if (!updatedChef) {
       throw new Error('Chef does not exist');
     }
 
-    checkChef.restaurant = restaurant;
-    checkChef.location = location;
-    checkChef.openingHours = openingHours;
-    checkChef.closingHours = closingHours;
-    checkChef.contactNumber = contactNumber;
-    checkChef.description = description;
-
-    const savedChef = await checkChef.save();
-
-    res.status(201).json({ savedChef });
+    res.status(201).json({ chef: updatedChef });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
