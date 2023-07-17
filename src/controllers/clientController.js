@@ -1,24 +1,26 @@
 const Client = require('../models/client');
 const Dish = require('../models/dish');
 const Chef = require('../models/chef');
+const decodeJwtToken = require('../helpers/decodeJwtToken');
 
 exports.createClient = async (req, res) => {
   try {
-    const { user, address, contactNumber } = req.body;
-
-    const existingClient = await Client.findOne({ user });
+    const { address, contactNumber } = req.body;
+    const token = req.cookies.jwt;
+    const decodedToken = decodeJwtToken(token);
+    const existingClient = await Client.findOne({
+      userId: decodedToken.userId,
+    });
 
     if (existingClient) {
       throw new Error('Client already exists');
     }
 
-    const client = new Client({
-      user,
+    const createdClient = await Client.create({
+      userId: decodedToken.userId,
       address,
       contactNumber,
     });
-
-    const createdClient = await client.save();
 
     return res.status(201).json(createdClient);
   } catch (error) {
