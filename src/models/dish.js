@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 
 const dishSchema = new mongoose.Schema({
-  // chef: { type: Schema.Types.ObjectId, ref: 'Chef' },
+  chefId: { type: mongoose.Schema.Types.ObjectId, ref: 'Chef' },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   name: {
     type: String,
     required: true,

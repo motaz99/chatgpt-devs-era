@@ -1,8 +1,10 @@
+const decodeJwtToken = require('../helpers/decodeJwtToken');
+const Chef = require('../models/chef');
 const Dish = require('../models/dish');
 
 exports.createDish = async (req, res) => {
-  // we need to get an id as an authorized user
-  // const id = req.
+  const token = req.cookies.jwt;
+  const decodedToken = decodeJwtToken(token);
   const { name, description, price, rating } = req.body;
   try {
     const checkDish = await Dish.findOne({ name });
@@ -10,8 +12,11 @@ exports.createDish = async (req, res) => {
       throw new Error('Dish already exists...');
     }
 
+    const chef = await Chef.findOne({ userId: decodedToken.userId });
+
     const newDish = new Dish({
-      // chef: id,
+      chefId: chef._id,
+      userId: decodedToken.userId,
       name,
       description,
       price,
@@ -29,7 +34,10 @@ exports.createDish = async (req, res) => {
 
 exports.getAllDishes = async (req, res) => {
   try {
-    const dishes = await Dish.find();
+    const token = req.cookies.jwt;
+    const decodedToken = decodeJwtToken(token);
+
+    const dishes = await Dish.find({ userId: decodedToken.userId });
 
     res.json({ dishes });
   } catch (error) {
