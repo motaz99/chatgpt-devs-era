@@ -20,7 +20,7 @@ exports.createChef = async (req, res) => {
     if (checkChef) {
       throw new Error('Chef already exists.');
     }
-    const newChef = new Chef({
+    await Chef.create({
       userId: decodedToken.userId,
       restaurant,
       location,
@@ -29,8 +29,6 @@ exports.createChef = async (req, res) => {
       contactNumber,
       description,
     });
-
-    await newChef.save();
 
     res.status(201).json('Chef created successfully');
   } catch (error) {
