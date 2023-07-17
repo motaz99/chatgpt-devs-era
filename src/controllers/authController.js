@@ -58,10 +58,13 @@ const signup = async (req, res) => {
       firstname,
       lastname,
       email,
+      provider: null,
+      providerId: null,
+      profilePicture: null,
       password: hashedPassword,
+      type: 'normal-user',
       role,
     });
-
     const token = generateToken(newUser);
     res.cookie('jwt', token, {
       httpOnly: true,
