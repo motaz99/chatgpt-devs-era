@@ -16,15 +16,15 @@ exports.createClient = async (req, res) => {
       throw new Error('Client already exists');
     }
 
-    const createdClient = await Client.create({
+    await Client.create({
       userId: decodedToken.userId,
       address,
       contactNumber,
     });
 
-    return res.status(201).json(createdClient);
+    res.status(200).redirect('/api/clients/chefs');
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -38,7 +38,7 @@ exports.getClient = async (req, res) => {
       throw new Error('Client not found');
     }
 
-    res.status(200).json(client);
+    res.status(200).json({ message: 'Client information page', data: client });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -59,7 +59,9 @@ exports.updateClient = async (req, res) => {
       throw new Error('Client not found');
     }
 
-    res.status(200).json(updatedClient);
+    res
+      .status(200)
+      .json({ message: 'Client object got updated', data: updatedClient });
   } catch (error) {
     res.status(500).json({ error: 'Server error' });
   }
@@ -90,7 +92,7 @@ exports.createFavoriteDish = async (req, res) => {
     client.favoriteDishes.push(favoriteDish);
     await client.save();
 
-    res.status(200).json({ message: 'Favorite dish is added', client });
+    res.status(200).json({ message: 'Favorite dish is added', data: client });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -107,7 +109,9 @@ exports.getFavoriteDishes = async (req, res) => {
     }
 
     const { favoriteDishes } = client;
-    res.status(200).json({ favoriteDishes });
+    res
+      .status(200)
+      .json({ message: 'Favorite Dishes array', data: favoriteDishes });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -142,7 +146,7 @@ exports.getChefs = async (req, res) => {
       res.json({ message: 'No chefs available yet' });
     }
 
-    res.status(200).json(chefs);
+    res.status(200).json({ message: 'Array of available chefs', data: chefs });
   } catch (error) {
     res
       .status(500)
