@@ -39,7 +39,7 @@ exports.getAllDishes = async (req, res) => {
 
     const dishes = await Dish.find({ userId: decodedToken.userId });
 
-    res.json({ dishes });
+    res.json({ message: 'All dishes that related to the chef', data: dishes });
   } catch (error) {
     res.status(500).json({ error: 'Internal server error' });
   }
@@ -55,7 +55,7 @@ exports.getDishById = async (req, res) => {
       throw new Error('Dish not found');
     }
 
-    res.json(dish);
+    res.json({ message: 'Get specif dish using the dish Id', data: dish });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
