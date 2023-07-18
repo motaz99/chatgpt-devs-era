@@ -81,10 +81,9 @@ const signup = async (req, res) => {
   }
 };
 
-// logout
 const logout = async (req, res) => {
-  res.clearCookie('access-token');
-  res.send('Cookie deleted successfully');
+  res.clearCookie('jwt');
+  res.send('Logged out successfully');
 };
 
 const passwordReset = async (req, res) => {
