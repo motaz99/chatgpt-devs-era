@@ -1,12 +1,21 @@
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
 const generateToken = require('../helpers/generateToken');
+const decodeJwtToken = require('../helpers/decodeJwtToken');
 require('dotenv').config();
 
 const login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
+    const jwtToken = req.cookies.jwt;
+    if (jwtToken) {
+      const decodedToken = decodeJwtToken(jwtToken);
+      throw new Error(
+        `User already logged in using '${decodedToken.email}' email`
+      );
+    }
+
     const user = await User.findOne({ email });
     if (!user) {
       throw new Error('Invalid email or password');
@@ -42,6 +51,13 @@ const signup = async (req, res) => {
   const { firstname, lastname, email, password, role } = req.body;
 
   try {
+    const jwtToken = req.cookies.jwt;
+    if (jwtToken) {
+      const decodedToken = decodeJwtToken(jwtToken);
+      throw new Error(
+        `User already logged in using '${decodedToken.email}' email`
+      );
+    }
     const user = await User.findOne({ email });
     if (user) {
       throw new Error('Email is already registered');
