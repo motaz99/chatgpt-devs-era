@@ -34,10 +34,6 @@ exports.getClient = async (req, res) => {
     const decodedToken = decodeJwtToken(token);
     const client = await Client.findOne({ userId: decodedToken.userId });
 
-    if (!client) {
-      throw new Error('Client not found');
-    }
-
     res.status(200).json({ message: 'Client information page', data: client });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -55,10 +51,6 @@ exports.updateClient = async (req, res) => {
       { new: true }
     );
 
-    if (!updatedClient) {
-      throw new Error('Client not found');
-    }
-
     res
       .status(200)
       .json({ message: 'Client object got updated', data: updatedClient });
@@ -72,10 +64,6 @@ exports.createFavoriteDish = async (req, res) => {
     const token = req.cookies.jwt;
     const decodedToken = decodeJwtToken(token);
     const client = await Client.findOne({ userId: decodedToken.userId });
-
-    if (!client) {
-      throw new Error('Client not found');
-    }
 
     const { dishId } = req.body;
     const dish = await Dish.findById(dishId);
@@ -103,10 +91,6 @@ exports.getFavoriteDishes = async (req, res) => {
     const token = req.cookies.jwt;
     const decodedToken = decodeJwtToken(token);
     const client = await Client.findOne({ userId: decodedToken.userId });
-
-    if (!client) {
-      throw new Error('Client not found');
-    }
 
     const { favoriteDishes } = client;
     res
