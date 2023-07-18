@@ -41,9 +41,6 @@ exports.getChefInfo = async (req, res) => {
   const decodedToken = decodeJwtToken(token);
   try {
     const chef = await Chef.findOne({ userId: decodedToken.userId });
-    if (!chef) {
-      throw new Error('Chef does not exist. You need to create your Chef.');
-    }
 
     res.status(200).json({ message: 'Chef information page', data: chef });
   } catch (error) {
@@ -61,10 +58,6 @@ exports.editChefInfo = async (req, res) => {
       req.body,
       { new: true }
     );
-
-    if (!updatedChef) {
-      throw new Error('Chef does not exist');
-    }
 
     res
       .status(201)
