@@ -16,7 +16,7 @@ exports.createChef = async (req, res) => {
   const decodedToken = decodeJwtToken(token);
 
   try {
-    const checkChef = await Chef.findOne({ restaurant });
+    const checkChef = await Chef.findOne({ userId: decodedToken.userId });
     if (checkChef) {
       throw new Error('Chef already exists.');
     }
