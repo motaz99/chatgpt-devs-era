@@ -168,3 +168,18 @@ exports.getChefs = async (req, res) => {
       .json({ error: `Error while retrieving chefs: ${error.message}` });
   }
 };
+
+exports.getChefById = async (req, res) => {
+  try {
+    const chefId = req.params.id;
+    const chef = await Chef.findById(chefId);
+
+    if (!chef) {
+      throw new Error('Chef not found');
+    }
+
+    res.status(200).json(chef);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
