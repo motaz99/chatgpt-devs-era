@@ -30,7 +30,7 @@ exports.createChef = async (req, res) => {
       description,
     });
 
-    res.status(201).json('Chef created successfully');
+    res.status(201).redirect('/api/chef/me');
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -45,7 +45,7 @@ exports.getChefInfo = async (req, res) => {
       throw new Error('Chef does not exist. You need to create your Chef.');
     }
 
-    res.status(200).json({ chef });
+    res.status(200).json({ message: 'Chef information page', data: chef });
   } catch (error) {
     res.status(500).json({ error: 'Server error', message: error.message });
   }
@@ -66,7 +66,9 @@ exports.editChefInfo = async (req, res) => {
       throw new Error('Chef does not exist');
     }
 
-    res.status(201).json({ chef: updatedChef });
+    res
+      .status(201)
+      .json({ message: 'Chef object got updated', data: updatedChef });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
