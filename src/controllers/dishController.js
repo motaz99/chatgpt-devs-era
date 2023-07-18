@@ -7,12 +7,11 @@ exports.createDish = async (req, res) => {
   const decodedToken = decodeJwtToken(token);
   const { name, description, price, rating } = req.body;
   try {
-    const checkDish = await Dish.findOne({ name });
+    const chef = await Chef.findOne({ userId: decodedToken.userId });
+    const checkDish = await Dish.findOne({ name, chefId: chef._id });
     if (checkDish) {
       throw new Error('Dish already exists...');
     }
-
-    const chef = await Chef.findOne({ userId: decodedToken.userId });
 
     const newDish = new Dish({
       chefId: chef._id,
