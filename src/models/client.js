@@ -16,11 +16,13 @@ const clientSchema = mongoose.Schema({
       name: { type: String },
     },
   ],
-  // orderHistory: [{type: mongoose.Schema.Types.ObjectId, ref: 'Order'}],
-  // cart: [{
-  //     dish: { type: mongoose.Schema.Types.ObjectId, ref: 'Dish' },
-  //     quantity: { type: Number, min: 1 }
-  // }]
+  orderHistory: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Order' }],
+  cart: [
+    {
+      dish: { type: mongoose.Schema.Types.ObjectId, ref: 'Dish' },
+      quantity: { type: Number, min: 1 },
+    },
+  ],
 });
 
 module.exports = mongoose.model('Client', clientSchema);
