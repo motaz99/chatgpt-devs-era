@@ -12,5 +12,6 @@ router.delete('/me/favorite-dishes/:id', clientController.deleteFavoriteDish);
 router.get('/me/order-history', clientController.getOrderHistory);
 router.get('/chefs', clientController.getChefs);
 router.get('/chefs/:id', clientController.getChefById);
+router.get('/chefs/:id/dishes', clientController.getChefDishes);
 
 module.exports = router;
