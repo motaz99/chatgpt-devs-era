@@ -37,10 +37,7 @@ const login = async (req, res) => {
     }
 
     if (user.role === 'chef') {
-      // No we are just showing a message but later we complete the login flow we should replace this response with chef real info
-      res.json({
-        message: 'The orders that related to the chef should be show',
-      });
+      res.redirect('/api/chef/me');
     }
   } catch (error) {
     res.status(500).json({ error: error.message });
