@@ -137,3 +137,25 @@ exports.getChefs = async (req, res) => {
       .json({ error: `Error while retrieving chefs: ${error.message}` });
   }
 };
+
+exports.getChefsDishes = async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    const chefDishes = await Dish.find({ userId });
+
+    if (chefDishes.length === 0) {
+      res.status(200).json({
+        message: 'Dishes that are related to this chef',
+        data: "This chef didn't add dishes yet",
+      });
+    }
+
+    res.status(200).json({
+      message: 'Dishes that are related to this chef',
+      data: chefDishes,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};

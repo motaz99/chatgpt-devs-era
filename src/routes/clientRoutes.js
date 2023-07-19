@@ -23,5 +23,6 @@ router.delete(
   clientController.deleteFavoriteDish
 );
 router.get('/chefs', isUserCreatedClient, clientController.getChefs);
+router.get('/chefs/:id', isUserCreatedClient, clientController.getChefsDishes);
 
 module.exports = router;
