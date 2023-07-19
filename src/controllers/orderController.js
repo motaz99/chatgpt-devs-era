@@ -48,6 +48,18 @@ exports.getChefOrders = async (req, res) => {
 exports.chefUpdateOrderStatus = async (req, res) => {
   try {
     const { newStatus, orderId } = req.body;
+
+    if (newStatus === 'cancel') {
+      const order = await Order.findById(orderId);
+
+      if (!order) {
+        throw new Error('Order not found');
+      }
+
+      await Order.findByIdAndDelete(orderId);
+
+      res.status(200).json({ message: 'Order cancelled successfully' });
+    }
     const token = req.cookies.jwt;
     const decodedToken = decodeJwtToken(token);
     const chef = await Chef.findOne({ userId: decodedToken.userId });
