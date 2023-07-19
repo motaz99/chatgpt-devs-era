@@ -30,7 +30,7 @@ const login = async (req, res) => {
     if (user.role === 'chef') {
       // No we are just showing a message but later we complete the login flow we should replace this response with chef real info
       res.json({
-        message: 'The orders that related to the chef should be show',
+        message: 'The orders that related to the chef should be displayed here',
       });
     }
   } catch (error) {
@@ -58,9 +58,6 @@ const signup = async (req, res) => {
       firstname,
       lastname,
       email,
-      provider: null,
-      providerId: null,
-      profilePicture: null,
       password: hashedPassword,
       type: 'normal-user',
       role,
@@ -77,7 +74,7 @@ const signup = async (req, res) => {
       next: `You now need to fill the ${newUser.role} information`,
     });
   } catch (error) {
-    res.json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
 
