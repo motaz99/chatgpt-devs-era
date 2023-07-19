@@ -59,3 +59,32 @@ exports.getDishById = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+exports.dishesRatings = async (req, res) => {
+  const token = req.cookies.jwt;
+  const decodedToken = decodeJwtToken(token);
+
+  const { id } = req.params.id;
+  const { rating } = req.body;
+
+  try {
+    const dish = await Dish.findOne(id);
+
+    const existingRatingIndex = dish.ratings.findIndex((r) =>
+      r.userId.equals(decodedToken.userId)
+    );
+
+    if (existingRatingIndex !== -1) {
+      dish.ratings[existingRatingIndex].rating = rating;
+    } else {
+      const newRating = { userId: decodedToken.userId, rating };
+      dish.ratings.push(newRating);
+    }
+
+    await dish.save();
+
+    res.status(201).json('Dish Ratted Successfully');
+  } catch (error) {
+    res.status(500).json(error.message);
+  }
+};
