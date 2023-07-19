@@ -5,7 +5,7 @@ const Dish = require('../models/dish');
 exports.createDish = async (req, res) => {
   const token = req.cookies.jwt;
   const decodedToken = decodeJwtToken(token);
-  const { name, description, price, rating } = req.body;
+  const { name, description, price } = req.body;
   try {
     const checkDish = await Dish.findOne({ name });
     if (checkDish) {
@@ -21,7 +21,6 @@ exports.createDish = async (req, res) => {
       description,
       price,
       /* picture, */
-      rating,
     });
 
     const savedDish = await newDish.save();
