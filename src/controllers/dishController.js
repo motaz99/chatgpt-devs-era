@@ -54,21 +54,7 @@ exports.getDishById = async (req, res) => {
       throw new Error('Dish not found');
     }
 
-    const ratingsCount = dish.ratings.length;
-    const ratingSum = dish.ratings.reduce(
-      (sum, rating) => sum + rating.rating,
-      0
-    );
-    const averageRating = ratingsCount > 0 ? ratingSum / ratingsCount : 0;
-
-    dish.ratingSum = ratingSum;
-    dish.averageRating = averageRating.toFixed(1);
-
-    res.json({
-      dish,
-      numberOfPeopleWhoRated: ratingsCount,
-      averageRating: averageRating.toFixed(1),
-    });
+    res.json({ dish });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -78,11 +64,11 @@ exports.dishesRatings = async (req, res) => {
   const token = req.cookies.jwt;
   const decodedToken = decodeJwtToken(token);
 
-  const { id } = req.params.id;
+  const { id } = req.params;
   const { rating } = req.body;
 
   try {
-    const dish = await Dish.findOne(id);
+    const dish = await Dish.findById(id);
 
     const existingRatingIndex = dish.ratings.findIndex((r) =>
       r.userId.equals(decodedToken.userId)
@@ -95,9 +81,18 @@ exports.dishesRatings = async (req, res) => {
       dish.ratings.push(newRating);
     }
 
+    const ratingsCount = dish.ratings.length;
+    const ratingSum = dish.ratings.reduce(
+      (sum, value) => sum + value.rating,
+      0
+    );
+    const averageRating = ratingsCount > 0 ? ratingSum / ratingsCount : 0;
+
+    dish.ratingAve = averageRating.toFixed(1);
+
     await dish.save();
 
-    res.status(201).json('Dish Ratted Successfully');
+    res.status(201).json('Dish Rated Successfully');
   } catch (error) {
     res.status(500).json(error.message);
   }
