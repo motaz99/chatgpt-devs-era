@@ -5,22 +5,29 @@ const dishSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   name: {
     type: String,
-    required: true,
+    required: false,
   },
   description: {
     type: String,
-    required: true,
+    required: false,
   },
   price: {
     type: String,
-    required: true,
+    required: false,
   },
   /* picture: {
     type: String,
-    required: true,
+    required: false,
   }, */
-  rating: {
-    type: String,
+  ratings: {
+    type: [
+      {
+        userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+        rating: { type: Number, required: false, min: 1, max: 5 },
+        _id: false, // -----------------------------------------------> we won't need an Id here
+      },
+    ],
+    default: [],
   },
 });
 
