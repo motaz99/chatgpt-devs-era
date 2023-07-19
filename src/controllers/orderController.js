@@ -44,3 +44,33 @@ exports.getChefOrders = async (req, res) => {
     res.status(500).json({ error: 'Failed to retrieve chef orders' });
   }
 };
+
+exports.chefUpdateOrderStatus = async (req, res) => {
+  try {
+    const { newStatus, orderId } = req.body;
+    const token = req.cookies.jwt;
+    const decodedToken = decodeJwtToken(token);
+    const chef = await Chef.findOne({ userId: decodedToken.userId });
+    const order = await Order.findByIdAndUpdate(
+      orderId,
+      { status: newStatus },
+      { new: true }
+    );
+
+    if (!order) {
+      throw new Error('Order not found');
+    }
+
+    if (order.chefId.toString() !== chef._id.toString()) {
+      throw new Error('You are not authorized to update this order');
+    }
+
+    res
+      .status(200)
+      .json({ message: 'Order status updated successfully', data: order });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: 'Failed to update order status', error: error.message });
+  }
+};

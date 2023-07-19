@@ -15,5 +15,11 @@ router.get(
   isUserCreatedChef,
   orderController.getChefOrders
 );
+router.put(
+  '/chef-update-order-status',
+  verifyChef,
+  isUserCreatedChef,
+  orderController.chefUpdateOrderStatus
+);
 
 module.exports = router;
