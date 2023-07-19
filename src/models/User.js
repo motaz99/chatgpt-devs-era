@@ -19,12 +19,15 @@ const userSchema = new mongoose.Schema({
   },
   provider: {
     type: String,
+    required: false,
   },
   providerId: {
     type: String,
+    required: false,
   },
   profilePicture: {
     type: String,
+    required: false,
   },
   type: {
     type: String,
