@@ -9,6 +9,12 @@ const { verifyChef, verifyClient } = require('../middlewares/verfiyRole');
 router.use(express.json());
 
 router.post('/', verifyClient, isUserCreatedClient, orderController.postOrder);
+router.delete(
+  '/cancel-order/:id',
+  verifyClient,
+  isUserCreatedClient,
+  orderController.cancelOrder
+);
 router.get(
   '/chef-orders',
   verifyChef,

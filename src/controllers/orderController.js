@@ -74,3 +74,28 @@ exports.chefUpdateOrderStatus = async (req, res) => {
       .json({ message: 'Failed to update order status', error: error.message });
   }
 };
+
+exports.cancelOrder = async (req, res) => {
+  try {
+    const orderId = req.params.id;
+    const order = await Order.findById(orderId);
+
+    if (!order) {
+      throw new Error('Order not found');
+    }
+
+    if (order.status !== 'pending') {
+      throw new Error(
+        'Order cannot be cancelled because the chef started cooking your order'
+      );
+    }
+
+    await Order.findByIdAndDelete(orderId);
+
+    res.status(200).json({ message: 'Order cancelled successfully' });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: 'Failed to cancel order', error: error.message });
+  }
+};
