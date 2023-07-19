@@ -54,7 +54,21 @@ exports.getDishById = async (req, res) => {
       throw new Error('Dish not found');
     }
 
-    res.json(dish);
+    const ratingsCount = dish.ratings.length;
+    const ratingSum = dish.ratings.reduce(
+      (sum, rating) => sum + rating.rating,
+      0
+    );
+    const averageRating = ratingsCount > 0 ? ratingSum / ratingsCount : 0;
+
+    dish.ratingSum = ratingSum;
+    dish.averageRating = averageRating.toFixed(1);
+
+    res.json({
+      dish,
+      numberOfPeopleWhoRated: ratingsCount,
+      averageRating: averageRating.toFixed(1),
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
