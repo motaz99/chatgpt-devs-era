@@ -60,3 +60,20 @@ exports.getDishById = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+exports.deleteDishById = async (req, res) => {
+  const dishId = req.params.id;
+
+  try {
+    const dish = await Dish.findByIdAndDelete(dishId);
+
+    if (!dish) {
+      res.status(404).json({ error: 'Dish not found' });
+    }
+
+    res.json({ message: 'Dish deleted successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
