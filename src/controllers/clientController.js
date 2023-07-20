@@ -183,24 +183,3 @@ exports.getChefById = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
-exports.getChefDishes = async (req, res) => {
-  try {
-    const chefId = req.params.id;
-    const chef = await Chef.findById(chefId);
-
-    if (!chef) {
-      throw new Error('Chef not found');
-    }
-
-    const chefDishes = await Dish.find({ chefId });
-
-    if (chefDishes.length === 0) {
-      res.json({ message: 'No dishes found for this chef' });
-    }
-
-    res.status(200).json(chefDishes);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
