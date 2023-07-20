@@ -13,7 +13,7 @@ router.delete(
   '/cancel-order/:id',
   verifyClient,
   isUserCreatedClient,
-  orderController.cancelOrder
+  orderController.clientCancelOrder
 );
 router.get(
   '/chef-orders',

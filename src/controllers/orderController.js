@@ -112,7 +112,7 @@ exports.chefUpdateOrderStatus = async (req, res) => {
   }
 };
 
-exports.cancelOrder = async (req, res) => {
+exports.clientCancelOrder = async (req, res) => {
   try {
     const orderId = req.params.id;
     const order = await Order.findById(orderId);
