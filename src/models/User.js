@@ -36,6 +36,7 @@ const userSchema = new mongoose.Schema({
   role: {
     type: String,
     default: 'user',
+    enum: ['client', 'chef'],
     required: true,
   },
   created_at: {

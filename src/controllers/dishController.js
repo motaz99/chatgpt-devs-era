@@ -7,12 +7,11 @@ exports.createDish = async (req, res) => {
   const decodedToken = decodeJwtToken(token);
   const { name, description, price } = req.body;
   try {
-    const checkDish = await Dish.findOne({ name });
+    const chef = await Chef.findOne({ userId: decodedToken.userId });
+    const checkDish = await Dish.findOne({ name, chefId: chef._id });
     if (checkDish) {
       throw new Error('Dish already exists...');
     }
-
-    const chef = await Chef.findOne({ userId: decodedToken.userId });
 
     const newDish = new Dish({
       chefId: chef._id,
@@ -38,7 +37,7 @@ exports.getAllDishes = async (req, res) => {
 
     const dishes = await Dish.find({ userId: decodedToken.userId });
 
-    res.json({ dishes });
+    res.json({ message: 'All dishes that related to the chef', data: dishes });
   } catch (error) {
     res.status(500).json({ error: 'Internal server error' });
   }
@@ -53,8 +52,7 @@ exports.getDishById = async (req, res) => {
     if (!dish) {
       throw new Error('Dish not found');
     }
-
-    res.json({ dish });
+    res.json({ message: 'Get specif dish using the dish Id', data: dish });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

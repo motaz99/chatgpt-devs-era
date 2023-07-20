@@ -1,12 +1,21 @@
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
 const generateToken = require('../helpers/generateToken');
+const decodeJwtToken = require('../helpers/decodeJwtToken');
 require('dotenv').config();
 
 const login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
+    const jwtToken = req.cookies.jwt;
+    if (jwtToken) {
+      const decodedToken = decodeJwtToken(jwtToken);
+      throw new Error(
+        `User already logged in using '${decodedToken.email}' email`
+      );
+    }
+
     const user = await User.findOne({ email });
     if (!user) {
       throw new Error('Invalid email or password');
@@ -28,10 +37,7 @@ const login = async (req, res) => {
     }
 
     if (user.role === 'chef') {
-      // No we are just showing a message but later we complete the login flow we should replace this response with chef real info
-      res.json({
-        message: 'The orders that related to the chef should be displayed here',
-      });
+      res.redirect('/api/chef/me');
     }
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -42,6 +48,13 @@ const signup = async (req, res) => {
   const { firstname, lastname, email, password, role } = req.body;
 
   try {
+    const jwtToken = req.cookies.jwt;
+    if (jwtToken) {
+      const decodedToken = decodeJwtToken(jwtToken);
+      throw new Error(
+        `User already logged in using '${decodedToken.email}' email`
+      );
+    }
     const user = await User.findOne({ email });
     if (user) {
       throw new Error('Email is already registered');
@@ -78,10 +91,9 @@ const signup = async (req, res) => {
   }
 };
 
-// logout
 const logout = async (req, res) => {
-  res.clearCookie('access-token');
-  res.send('Cookie deleted successfully');
+  res.clearCookie('jwt');
+  res.send('Logged out successfully');
 };
 
 const passwordReset = async (req, res) => {
