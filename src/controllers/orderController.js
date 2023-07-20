@@ -114,9 +114,17 @@ exports.chefUpdateOrderStatus = async (req, res) => {
 
 exports.clientCancelOrder = async (req, res) => {
   try {
+    const token = req.cookies.jwt;
+    const decodedToken = decodeJwtToken(token);
     const orderId = req.params.id;
-    const order = await Order.findById(orderId);
-
+    const order = await Order.findById(orderId)
+      .populate('chefId')
+      .populate('dishId')
+      .exec();
+    if (!order) {
+      throw new Error('Order not found');
+    }
+    const chefDetails = await order.chefId.populate('userId');
     if (!order) {
       throw new Error('Order not found');
     }
@@ -128,6 +136,12 @@ exports.clientCancelOrder = async (req, res) => {
     }
 
     await Order.findByIdAndDelete(orderId);
+
+    await sendEmail(
+      chefDetails.userId.email,
+      'Order status update',
+      `The client '${decodedToken.firstname} ${decodedToken.lastname}' has been canceled his order with the name '${order.dishId.name}'`
+    );
 
     res.status(200).json({ message: 'Order cancelled successfully' });
   } catch (error) {
