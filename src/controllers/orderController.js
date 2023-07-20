@@ -61,26 +61,33 @@ exports.getChefOrders = async (req, res) => {
 exports.chefUpdateOrderStatus = async (req, res) => {
   try {
     const { newStatus, orderId } = req.body;
+    const token = req.cookies.jwt;
+    const decodedToken = decodeJwtToken(token);
 
+    const order = await Order.findById(orderId).populate('dishId');
+    const clientUserDetails = await Client.findById(order.clientId)
+      .populate('userId')
+      .exec();
     if (newStatus === 'cancel') {
-      const order = await Order.findById(orderId);
-
       if (!order) {
         throw new Error('Order not found');
       }
 
       await Order.findByIdAndDelete(orderId);
 
+      await sendEmail(
+        clientUserDetails.userId.email,
+        'Order status update',
+        `Your order has been canceled`
+      );
+
       res.status(200).json({ message: 'Order cancelled successfully' });
     }
-    const token = req.cookies.jwt;
-    const decodedToken = decodeJwtToken(token);
+
+    order.status = newStatus;
+    await order.save();
+
     const chef = await Chef.findOne({ userId: decodedToken.userId });
-    const order = await Order.findByIdAndUpdate(
-      orderId,
-      { status: newStatus },
-      { new: true }
-    );
 
     if (!order) {
       throw new Error('Order not found');
@@ -90,6 +97,11 @@ exports.chefUpdateOrderStatus = async (req, res) => {
       throw new Error('You are not authorized to update this order');
     }
 
+    await sendEmail(
+      clientUserDetails.userId.email,
+      'Order status update',
+      `Your order '${order.dishId.name}' is now in ${order.status} status`
+    );
     res
       .status(200)
       .json({ message: 'Order status updated successfully', data: order });
