@@ -3,20 +3,20 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const OrderSchema = new Schema({
-  /* client: {
+  client: {
     type: Schema.Types.ObjectId,
-    ref: 'Client'
-  }, */
+    ref: 'Client',
+  },
   items: [
     {
       dish: {
         type: Schema.Types.ObjectId,
         ref: 'Dish',
       },
-      /* chef: {
-      type: Schema.Types.ObjectId,
-      ref: 'Chef'
-    }, */
+      chef: {
+        type: Schema.Types.ObjectId,
+        ref: 'Chef',
+      },
       quantity: {
         type: Number,
         min: 1,
