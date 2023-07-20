@@ -1,4 +1,5 @@
 const decodeJwtToken = require('../helpers/decodeJwtToken');
+const sendEmail = require('../helpers/sendEmail');
 const Chef = require('../models/chef');
 const Client = require('../models/client');
 const Dish = require('../models/dish');
@@ -20,7 +21,19 @@ exports.postOrder = async (req, res) => {
       chefId: dish.chefId,
       quantity,
     });
-    res.status(201).json(order);
+
+    const userChef = await Chef.findById(order.chefId)
+      .populate('userId')
+      .exec();
+
+    await sendEmail(
+      userChef.userId.email,
+      'New order',
+      `You have new order by '${decodedToken.firstname} ${decodedToken.lastname}'`
+    );
+    res
+      .status(201)
+      .json({ message: 'Your order has been sent successfully', data: order });
   } catch (error) {
     res.status(500).json({ error: 'Failed to create the order' });
   }
