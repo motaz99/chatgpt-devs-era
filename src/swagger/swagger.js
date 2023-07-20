@@ -15,6 +15,35 @@ const options = {
       },
     ],
     components: {
+      schemas: {
+        User: {
+          type: 'object',
+          properties: {
+            firstname: {
+              type: 'string',
+              example: 'Stefan',
+            },
+            lastname: {
+              type: 'string',
+              example: 'Zweig',
+            },
+            email: {
+              type: 'string',
+              format: 'email',
+              example: 'stefan.zweig@email.com',
+            },
+            type: {
+              type: 'string',
+              default: 'normal-user',
+            },
+            role: {
+              type: 'string',
+              enum: ['client', 'chef'],
+              example: 'client',
+            },
+          },
+        },
+      },
       securitySchemes: {
         bearerAuth: {
           type: 'http',
