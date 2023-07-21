@@ -5,15 +5,15 @@ const dishSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   name: {
     type: String,
-    required: false,
+    required: true,
   },
   description: {
     type: String,
-    required: false,
+    required: true,
   },
   price: {
     type: String,
-    required: false,
+    required: true,
   },
   /* picture: {
     type: String,
