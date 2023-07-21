@@ -22,7 +22,14 @@ router.delete(
   isUserCreatedClient,
   clientController.deleteFavoriteDish
 );
+router.get(
+  '/me/order-history',
+  isUserCreatedClient,
+  clientController.getOrderHistory
+);
 router.get('/chefs', isUserCreatedClient, clientController.getChefs);
 router.post('/:id', isUserCreatedClient, clientController.dishesRatings);
+
+router.get('/chefs/:id', isUserCreatedClient, clientController.getChefById);
 
 module.exports = router;

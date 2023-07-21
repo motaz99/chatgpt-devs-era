@@ -122,6 +122,25 @@ exports.deleteFavoriteDish = async (req, res) => {
   }
 };
 
+exports.getOrderHistory = async (req, res) => {
+  try {
+    const token = req.cookies.jwt;
+    const decodedToken = decodeJwtToken(token);
+    const client = await Client.findOne({
+      userId: decodedToken.userId,
+    }).populate('orderHistory');
+
+    if (!client) {
+      throw new Error('Client not found');
+    }
+
+    const { orderHistory } = client;
+    res.status(200).json({ orderHistory });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 exports.getChefs = async (req, res) => {
   try {
     const chefs = await Chef.find();
@@ -135,6 +154,21 @@ exports.getChefs = async (req, res) => {
     res
       .status(500)
       .json({ error: `Error while retrieving chefs: ${error.message}` });
+  }
+};
+
+exports.getChefById = async (req, res) => {
+  try {
+    const chefId = req.params.id;
+    const chef = await Chef.findById(chefId);
+
+    if (!chef) {
+      throw new Error('Chef not found');
+    }
+
+    res.status(200).json(chef);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
 
