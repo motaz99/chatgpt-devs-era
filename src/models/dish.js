@@ -17,7 +17,7 @@ const dishSchema = new mongoose.Schema({
   },
   /* picture: {
     type: String,
-    required: false,
+    required: true,
   }, */
   ratings: {
     type: [
