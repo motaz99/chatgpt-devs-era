@@ -150,6 +150,46 @@ const options = {
           },
           required: ['chefId', 'userId', 'name', 'description', 'price'],
         },
+        Order: {
+          type: 'object',
+          properties: {
+            clientId: {
+              type: 'string',
+              example: '64adddb8ffed160fd72dc69c',
+            },
+            items: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  dishId: {
+                    type: 'string',
+                    example: '64adddb8ffed160fd72dc69c',
+                  },
+                  chefId: {
+                    type: 'string',
+                    example: '64adddb8ffed160fd72dc69c',
+                  },
+                  quantity: {
+                    type: 'number',
+                    example: 2,
+                  },
+                },
+              },
+            },
+            status: {
+              type: 'string',
+              enum: [
+                'pending',
+                'inProgress',
+                'cancel',
+                'onTheWay',
+                'delivered',
+              ],
+              example: 'pending',
+            },
+          },
+        },
       },
     },
     securitySchemes: {
