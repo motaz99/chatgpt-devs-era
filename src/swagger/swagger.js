@@ -120,6 +120,36 @@ const options = {
           },
           required: ['userId', 'address', 'contactNumber'],
         },
+        Dish: {
+          type: 'object',
+          properties: {
+            chefId: {
+              type: 'string',
+              example: '64adddb8ffed160fd72dc69c',
+            },
+            userId: {
+              type: 'string',
+              example: '64adddb8ffed160fd72dc69c',
+            },
+            name: {
+              type: 'string',
+              example: 'Mediterranean Pizza',
+            },
+            description: {
+              type: 'string',
+              example: 'Pizza with mediterranean veggies as topping',
+            },
+            price: {
+              type: 'string',
+              example: '$12.99',
+            },
+            rating: {
+              type: 'string',
+              example: '4.5',
+            },
+          },
+          required: ['chefId', 'userId', 'name', 'description', 'price'],
+        },
       },
     },
     securitySchemes: {
