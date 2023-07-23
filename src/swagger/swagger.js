@@ -86,13 +86,47 @@ const options = {
             'description',
           ],
         },
-      },
-      securitySchemes: {
-        bearerAuth: {
-          type: 'http',
-          scheme: 'bearer',
-          bearerFormat: 'JWT',
+        Client: {
+          type: 'object',
+          properties: {
+            userId: {
+              type: 'string',
+              example: '64adddb8ffed160fd72dc69c',
+            },
+            address: {
+              type: 'string',
+              example: '112 Cross Street',
+            },
+            contactNumber: {
+              type: 'string',
+              example: '+908887776655',
+            },
+            favoriteDishes: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  dishId: {
+                    type: 'string',
+                    example: '64adddb8ffed160fd72dc69c',
+                  },
+                  name: {
+                    type: 'string',
+                    example: 'Pizza',
+                  },
+                },
+              },
+            },
+          },
+          required: ['userId', 'address', 'contactNumber'],
         },
+      },
+    },
+    securitySchemes: {
+      bearerAuth: {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
       },
     },
     security: [
