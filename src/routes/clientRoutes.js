@@ -28,6 +28,11 @@ router.get(
   clientController.getOrderHistory
 );
 router.get('/chefs', isUserCreatedClient, clientController.getChefs);
+router.get(
+  '/chefs/dishes/:id',
+  isUserCreatedClient,
+  clientController.getChefDishes
+);
 
 router.get('/chefs/:id', isUserCreatedClient, clientController.getChefById);
 

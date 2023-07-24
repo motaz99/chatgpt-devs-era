@@ -6,7 +6,7 @@ const registrationValidators = {
       .trim()
       .notEmpty()
       .withMessage(`${name} should not be empty`)
-      .isLength({ min: 4 })
+      .isLength({ min: 2 })
       .withMessage(`${name} must be at least 4 characters long`)
       .custom((value) => !/\s/.test(value))
       .withMessage(`${name} should not include spaces`)
