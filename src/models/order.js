@@ -3,29 +3,26 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const OrderSchema = new Schema({
-  client: {
+  clientId: {
     type: Schema.Types.ObjectId,
     ref: 'Client',
   },
-  items: [
-    {
-      dish: {
-        type: Schema.Types.ObjectId,
-        ref: 'Dish',
-      },
-      chef: {
-        type: Schema.Types.ObjectId,
-        ref: 'Chef',
-      },
-      quantity: {
-        type: Number,
-        min: 1,
-      },
-    },
-  ],
+  dishId: {
+    type: Schema.Types.ObjectId,
+    ref: 'Dish',
+  },
+  chefId: {
+    type: Schema.Types.ObjectId,
+    ref: 'Chef',
+  },
+  quantity: {
+    type: Number,
+    min: 1,
+    required: true,
+  },
   status: {
     type: String,
-    enum: ['pending', 'accepted', 'rejected', 'inProgress', 'completed'],
+    enum: ['pending', 'inProgress', 'cancel', 'onTheWay', 'delivered'],
     default: 'pending',
   },
 });
