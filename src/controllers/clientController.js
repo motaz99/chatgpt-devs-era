@@ -198,7 +198,7 @@ exports.dishesRatings = async (req, res) => {
       (sum, value) => sum + value.rating,
       0
     );
-    const averageRating = ratingsCount > 0 ? ratingSum / ratingsCount : 0;
+    const averageRating = ratingSum / ratingsCount;
 
     dish.ratingAve = averageRating.toFixed(1);
 
