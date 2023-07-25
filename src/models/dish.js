@@ -29,6 +29,10 @@ const dishSchema = new mongoose.Schema({
     ],
     default: [],
   },
+ratingAve: {
+    type: String,
+    required: false,
+  },
 });
 
 const Dish = mongoose.model('Dish', dishSchema);
