@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>My Backend App</title>
   <link rel="stylesheet" href="https://unpkg.com/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <script src="https://unpkg.com/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
   <script src="https://unpkg.com/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
 
@@ -102,33 +103,82 @@
         </p>
       </section>
       <section id="technologies" class="mt-4">
-        <h2>Technologies Used</h2>
-        <ul class="list-group">
-          <li class="list-group-item"><strong>Node.js</strong></li>
-          <li class="list-group-item"><strong>Express</strong></li>
-          <li class="list-group-item"><strong>MongoDB</strong></li>
-          <li class="list-group-item"><strong>Mongoose</strong></li>
-          <li class="list-group-item"><strong>EJS (Embedded JavaScript)</strong></li>
-          <li class="list-group-item"><strong>Passport.js</strong></li>
-          <li class="list-group-item"><strong>JSON Web Tokens (JWT)</strong></li>
-          <li class="list-group-item"><strong>Bcrypt</strong></li>
-          <li class="list-group-item"><strong>Cookie-parser</strong></li>
-          <li class="list-group-item"><strong>Body-parser</strong></li>
-          <li class="list-group-item"><strong>Nodemailer</strong></li>
-          <li class="list-group-item"><strong>Bootstrap</strong></li>
-          <li class="list-group-item"><strong>Bcrypt</strong></li>
-          <li class="list-group-item"><strong>Cookie-parser</strong></li>
-          <li class="list-group-item"><strong>Body-parser</strong></li>
-          <li class="list-group-item"><strong>Nodemailer</strong></li>
-          <li class="list-group-item"><strong>Bootstrap</strong></li>
-          <li class="list-group-item"><strong>Figma</strong></li>
-          <li class="list-group-item"><strong>Jest</strong></li>
-          <li class="list-group-item"><strong>Eslint</strong></li>
-          <li class="list-group-item"><strong>Prettier</strong></li>
-          <li class="list-group-item"><strong>Husky</strong></li>
-          <li class="list-group-item"><strong>lint-staged</strong></li>
-        </ul>
-      </section>
+        <h2 class="mb-5">Technologies Used</h2>
+        <div class="row">
+          <div class="col-md-4 mb-3">
+            <i class="fab fa-node-js fa-2x text-success"></i>
+            <p>Node.js</p>
+          </div>
+          <div class="col-md-4 mb-3">
+            <i class="fab fa-js-square fa-2x text-warning"></i>
+            <p>Express</p>
+          </div>
+          <div class="col-md-4 mb-3">
+            <i class="fas fa-database fa-2x text-success"></i>
+            <p>MongoDB</p>
+          </div>
+          <div class="col-md-4 mb-3">
+            <i class="fas fa-dice-d20 fa-2x text-success"></i>
+            <p>Mongoose</p>
+          </div>
+          <div class="col-md-4 mb-3">
+            <i class="fab fa-html5 fa-2x text-danger"></i>
+            <p>EJS (Embedded JavaScript)</p>
+          </div>
+          <div class="col-md-4 mb-3">
+            <i class="fab fa-passport fa-2x text-info"></i>
+            <p>Passport.js</p>
+          </div>
+          <div class="col-md-4 mb-3">
+            <i class="fas fa-key fa-2x text-success"></i>
+            <p>JSON Web Tokens (JWT)</p>
+          </div>
+          <div class="col-md-4 mb-3">
+            <i class="fas fa-lock fa-2x text-warning"></i>
+            <p>Bcrypt</p>
+          </div>
+          <div class="col-md-4 mb-3">
+            <i class="far fa-clipboard fa-2x text-primary"></i>
+            <p>Cookie-parser</p>
+          </div>
+          <div class="col-md-4 mb-3">
+            <i class="fas fa-envelope fa-2x text-secondary"></i>
+            <p>Body-parser</p>
+          </div>
+          <div class="col-md-4 mb-3">
+            <i class="fas fa-envelope fa-2x text-danger"></i>
+            <p>Nodemailer</p>
+          </div>
+          <div class="col-md-4 mb-3">
+            <i class="fab fa-bootstrap fa-2x text-info"></i>
+            <p>Bootstrap</p>
+          </div>
+          <div class="col-md-4 mb-3">
+            <i class="fab fa-figma fa-2x text-success"></i>
+            <p>Figma</p>
+          </div>
+          <div class="col-md-4 mb-3">
+            <i class="fas fa-js fa-2x text-warning"></i>
+            <p>Jest</p>
+          </div>
+          <div class="col-md-4 mb-3">
+            <i class="fas fa-code fa-2x text-primary"></i>
+            <p>Eslint</p>
+          </div>
+          <div class="col-md-4 mb-3">
+            <i class="fas fa-check fa-2x text-secondary"></i>
+            <p>Prettier</p>
+          </div>
+          <div class="col-md-4 mb-3">
+            <i class="fas fa-code fa-2x text-danger"></i>
+            <p>Husky</p>
+          </div>
+          <div class="col-md-4 mb-3">
+            <i class="fas fa-check fa-2x text-info"></i>
+            <p>lint-staged</p>
+          </div>
+        </div>
+      </section>      
       <section id="architecture" class="mt-4">
         <h2>System Architecture & Database Schema Diagrams</h2>
         <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FAavCuzuZfcP49FQ42d8m2A%2FCOOKIZ-Project%3Ftype%3Ddesign%26node-id%3D0%253A1%26mode%3Ddesign%26t%3DdTZlQnrRnJNDoFpp-1" allowfullscreen></iframe>    
