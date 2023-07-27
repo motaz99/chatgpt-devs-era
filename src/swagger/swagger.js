@@ -32,6 +32,10 @@ const options = {
               format: 'email',
               example: 'stefan.zweig@email.com',
             },
+            password: {
+              type: 'string',
+              example: 'Password1',
+            },
             type: {
               type: 'string',
               default: 'normal-user',
@@ -204,6 +208,35 @@ const options = {
         bearerAuth: [],
       },
     ],
+    paths: {
+      '/auth/signup': {
+        post: {
+          tags: ['Authentication'],
+          summary: 'User Signup',
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/User',
+                },
+              },
+            },
+          },
+          responses: {
+            201: {
+              description: 'User created successfully',
+            },
+            400: {
+              description: 'Bad Request',
+            },
+            500: {
+              description: 'Server Error',
+            },
+          },
+        },
+      },
+    },
   },
   apis: ['../routes/index.js'],
 };

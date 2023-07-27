@@ -90,7 +90,7 @@ const signup = async (req, res) => {
       next: `You now need to fill the ${newUser.role} information`,
     });
   } catch (error) {
-    res.json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
 

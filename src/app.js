@@ -20,11 +20,11 @@ app.use(bodyParser.json());
 const port = process.env.NODE_LOCAL_PORT;
 
 app.get('/api-docs.json', (req, res) => {
-  res.json(swaggerJsdoc(swaggerOptions));
+  res.json(swaggerOptions);
 });
 
 app.use(
-  '/',
+  '/api-docs',
   swaggerUi.serve,
   swaggerUi.setup(swaggerOptions, { explorer: true })
 );
