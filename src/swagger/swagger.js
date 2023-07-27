@@ -236,6 +236,33 @@ const options = {
           },
         },
       },
+      '/auth/login': {
+        post: {
+          tags: ['Authentication'],
+          summary: 'User Login',
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/User',
+                },
+              },
+            },
+          },
+          responses: {
+            201: {
+              description: 'User logged in successfully',
+            },
+            400: {
+              description: 'Bad Request',
+            },
+            500: {
+              description: 'Server Error',
+            },
+          },
+        },
+      },
     },
   },
   apis: ['../routes/index.js'],
