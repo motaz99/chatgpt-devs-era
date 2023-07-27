@@ -19,8 +19,19 @@ const dishSchema = new mongoose.Schema({
     type: String,
     required: true,
   }, */
-  rating: {
+  ratings: {
+    type: [
+      {
+        userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+        rating: { type: Number, required: false, min: 1, max: 5 },
+        _id: false, // -----------------------------------------------> we won't need an Id here
+      },
+    ],
+    default: [],
+  },
+ratingAve: {
     type: String,
+    required: false,
   },
 });
 

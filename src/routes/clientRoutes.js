@@ -28,6 +28,9 @@ router.get(
   clientController.getOrderHistory
 );
 router.get('/chefs', isUserCreatedClient, clientController.getChefs);
+
+router.post('/rating-dish/:id', isUserCreatedClient, clientController.dishesRatings);
+
 router.get(
   '/chefs/dishes/:id',
   isUserCreatedClient,

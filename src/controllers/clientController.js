@@ -172,6 +172,44 @@ exports.getChefById = async (req, res) => {
   }
 };
 
+exports.dishesRatings = async (req, res) => {
+  const token = req.cookies.jwt;
+  const decodedToken = decodeJwtToken(token);
+
+  const { id } = req.params;
+  const { rating } = req.body;
+
+  try {
+    const dish = await Dish.findById(id);
+
+    const existingRatingIndex = dish.ratings.findIndex((r) =>
+      r.userId.equals(decodedToken.userId)
+    );
+
+    if (existingRatingIndex !== -1) {
+      dish.ratings[existingRatingIndex].rating = rating;
+    } else {
+      const newRating = { userId: decodedToken.userId, rating };
+      dish.ratings.push(newRating);
+    }
+
+    const ratingsCount = dish.ratings.length;
+    const ratingSum = dish.ratings.reduce(
+      (sum, value) => sum + value.rating,
+      0
+    );
+    const averageRating = ratingSum / ratingsCount;
+
+    dish.ratingAve = averageRating.toFixed(1);
+
+    await dish.save();
+
+    res.status(201).json('Dish Rated Successfully');
+} catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 exports.getChefDishes = async (req, res) => {
   const userId = req.params.id;
 
