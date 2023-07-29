@@ -29,7 +29,11 @@ router.get(
 );
 router.get('/chefs', isUserCreatedClient, clientController.getChefs);
 
-router.post('/rating-dish/:id', isUserCreatedClient, clientController.dishesRatings);
+router.post(
+  '/rating-dish/:id',
+  isUserCreatedClient,
+  clientController.dishesRatings
+);
 
 router.get(
   '/chefs/dishes/:id',

@@ -205,7 +205,7 @@ exports.dishesRatings = async (req, res) => {
     await dish.save();
 
     res.status(201).json('Dish Rated Successfully');
-} catch (error) {
+  } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
