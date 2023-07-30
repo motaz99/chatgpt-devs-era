@@ -1,4 +1,5 @@
 const swaggerJsDoc = require('swagger-jsdoc');
+const authSwagger = require('./authSwagger');
 
 const options = {
   definition: {
@@ -46,7 +47,7 @@ const options = {
               example: 'client',
             },
           },
-          required: ['firstname', 'lastname', 'email', 'role'],
+          required: ['firstname', 'lastname', 'email', 'password', 'role'],
         },
         Chef: {
           type: 'object',
@@ -209,60 +210,9 @@ const options = {
       },
     ],
     paths: {
-      '/auth/signup': {
-        post: {
-          tags: ['Authentication'],
-          summary: 'User Signup',
-          requestBody: {
-            required: true,
-            content: {
-              'application/json': {
-                schema: {
-                  $ref: '#/components/schemas/User',
-                },
-              },
-            },
-          },
-          responses: {
-            201: {
-              description: 'User created successfully',
-            },
-            400: {
-              description: 'Bad Request',
-            },
-            500: {
-              description: 'Server Error',
-            },
-          },
-        },
-      },
-      '/auth/login': {
-        post: {
-          tags: ['Authentication'],
-          summary: 'User Login',
-          requestBody: {
-            required: true,
-            content: {
-              'application/json': {
-                schema: {
-                  $ref: '#/components/schemas/User',
-                },
-              },
-            },
-          },
-          responses: {
-            201: {
-              description: 'User logged in successfully',
-            },
-            400: {
-              description: 'Bad Request',
-            },
-            500: {
-              description: 'Server Error',
-            },
-          },
-        },
-      },
+      '/auth/signup': authSwagger.signup,
+      '/auth/login': authSwagger.login,
+      '/auth/logout': authSwagger.logout,
     },
   },
   apis: ['../routes/index.js'],
