@@ -69,4 +69,32 @@ const logout = {
   },
 };
 
-module.exports = { signup, login, logout };
+const passwordReset = {
+  post: {
+    tags: ['Authentication'],
+    summary: 'Password Reset',
+    requestBody: {
+      required: true,
+      content: {
+        'application/json': {
+          schema: {
+            $ref: '#/components/schemas/PasswordResetRequest',
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: 'Password reset successful',
+      },
+      400: {
+        description: 'Bad Request',
+      },
+      500: {
+        description: 'Server Error',
+      },
+    },
+  },
+};
+
+module.exports = { signup, login, logout, passwordReset };
