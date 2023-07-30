@@ -33,7 +33,6 @@ describe('login', () => {
 
     await auth.login(req, res);
 
-    // Assertions
     expect(User.findOne).toHaveBeenCalledTimes(1);
     expect(bcrypt.compare).toHaveBeenCalledTimes(1);
     expect(res.cookie).toHaveBeenCalledTimes(1);
@@ -60,7 +59,6 @@ describe('login', () => {
       redirect: jest.fn(),
     };
 
-    // Mock the User.findOne and bcrypt.compare functions
     User.findOne = jest.fn().mockResolvedValue({
       email: user.email,
       password: await bcrypt.hash('password', 10),
@@ -69,7 +67,6 @@ describe('login', () => {
 
     await auth.login(req, res);
 
-    // Assertions
     expect(User.findOne).toHaveBeenCalledTimes(1);
     expect(bcrypt.compare).toHaveBeenCalledTimes(1);
     expect(res.status).toHaveBeenCalledTimes(1);
