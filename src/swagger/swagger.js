@@ -1,6 +1,7 @@
 const swaggerJsDoc = require('swagger-jsdoc');
 const schema = require('./schemasSwagger');
 const authSwagger = require('./authSwagger');
+const chefSwagger = require('./chefSwagger');
 
 const options = {
   definition: {
@@ -41,6 +42,9 @@ const options = {
       '/auth/signup': authSwagger.signup,
       '/auth/login': authSwagger.login,
       '/auth/logout': authSwagger.logout,
+      '/auth/passwordReset': authSwagger.passwordReset,
+      '/chef/': chefSwagger.createChef,
+      '/chef/me': chefSwagger.chefInfo,
     },
   },
   apis: ['../routes/index.js'],
