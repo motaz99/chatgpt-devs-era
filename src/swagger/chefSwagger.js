@@ -93,4 +93,54 @@ const chefInfo = {
   },
 };
 
-module.exports = { createChef, chefInfo };
+const dish = {
+  post: {
+    tags: ['Chef'],
+    summary: 'Create Dish',
+    requestBody: {
+      required: true,
+      content: {
+        'application/json': {
+          schema: {
+            $ref: '#/components/schemas/Dish',
+          },
+        },
+      },
+    },
+    responses: {
+      201: {
+        description: 'Dish created successfully',
+      },
+      400: {
+        description: 'Bad Request',
+      },
+      500: {
+        description: 'Server Error',
+      },
+    },
+  },
+  get: {
+    tags: ['Chef'],
+    summary: 'Get All Dishes',
+    responses: {
+      200: {
+        description: 'List of all dishes',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'array',
+              items: {
+                $ref: '#/components/schemas/Dish',
+              },
+            },
+          },
+        },
+      },
+      500: {
+        description: 'Server Error',
+      },
+    },
+  },
+};
+
+module.exports = { createChef, chefInfo, dish };

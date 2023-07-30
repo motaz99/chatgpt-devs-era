@@ -45,6 +45,7 @@ const options = {
       '/auth/passwordReset': authSwagger.passwordReset,
       '/chef/': chefSwagger.createChef,
       '/chef/me': chefSwagger.chefInfo,
+      '/chef/dish/': chefSwagger.dish,
     },
   },
   apis: ['../routes/index.js'],
