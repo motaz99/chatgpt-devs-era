@@ -2,6 +2,7 @@ const swaggerJsDoc = require('swagger-jsdoc');
 const schema = require('./schemasSwagger');
 const authSwagger = require('./authSwagger');
 const chefSwagger = require('./chefSwagger');
+const clientSwagger = require('./clientSwagger');
 
 const options = {
   definition: {
@@ -47,6 +48,7 @@ const options = {
       '/chef/me': chefSwagger.chefInfo,
       '/chef/dish/': chefSwagger.dish,
       '/chef/dish/{id}': chefSwagger.dishById,
+      '/client/': clientSwagger.createClient,
     },
   },
   apis: ['../routes/index.js'],
