@@ -54,6 +54,43 @@ const chefInfo = {
       },
     },
   },
+  put: {
+    tags: ['Chef'],
+    summary: 'Edit Chef Info',
+    requestBody: {
+      required: true,
+      content: {
+        'application/json': {
+          schema: {
+            $ref: '#/components/schemas/Chef',
+          },
+        },
+      },
+    },
+    responses: {
+      201: {
+        description: 'Chef object got updated',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                message: {
+                  type: 'string',
+                },
+                data: {
+                  $ref: '#/components/schemas/Chef',
+                },
+              },
+            },
+          },
+        },
+      },
+      500: {
+        description: 'Server Error',
+      },
+    },
+  },
 };
 
 module.exports = { createChef, chefInfo };
