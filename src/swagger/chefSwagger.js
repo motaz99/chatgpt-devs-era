@@ -143,4 +143,39 @@ const dish = {
   },
 };
 
-module.exports = { createChef, chefInfo, dish };
+const dishById = {
+  get: {
+    tags: ['Chef'],
+    summary: 'Get Dish by ID',
+    parameters: [
+      {
+        name: 'id',
+        in: 'path',
+        required: true,
+        schema: {
+          type: 'string',
+        },
+      },
+    ],
+    responses: {
+      200: {
+        description: 'Dish found',
+        content: {
+          'application/json': {
+            schema: {
+              $ref: '#/components/schemas/Dish',
+            },
+          },
+        },
+      },
+      404: {
+        description: 'Dish not found',
+      },
+      500: {
+        description: 'Server Error',
+      },
+    },
+  },
+};
+
+module.exports = { createChef, chefInfo, dish, dishById };

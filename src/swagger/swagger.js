@@ -46,6 +46,7 @@ const options = {
       '/chef/': chefSwagger.createChef,
       '/chef/me': chefSwagger.chefInfo,
       '/chef/dish/': chefSwagger.dish,
+      '/chef/dish/{id}': chefSwagger.dishById,
     },
   },
   apis: ['../routes/index.js'],
