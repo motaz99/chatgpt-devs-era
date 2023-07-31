@@ -63,4 +63,51 @@ const getUpdateClient = {
   },
 };
 
-module.exports = { createClient, getUpdateClient };
+const favoriteDish = {
+  post: {
+    tags: ['Client'],
+    summary: 'Add a favorite dish for the client',
+    requestBody: {
+      required: true,
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              dishId: {
+                type: 'string',
+                example: '64adddb8ffed160fd72dc69c',
+              },
+            },
+            required: ['dishId'],
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: 'Favorite dish added successfully',
+      },
+      400: {
+        description: 'Bad Request',
+      },
+      500: {
+        description: 'Server Error',
+      },
+    },
+  },
+  get: {
+    tags: ['Client'],
+    summary: 'Get client favorite dishes',
+    responses: {
+      200: {
+        description: 'Client favorite dishes retrieved successfully',
+      },
+      500: {
+        description: 'Server Error',
+      },
+    },
+  },
+};
+
+module.exports = { createClient, getUpdateClient, favoriteDish };

@@ -50,6 +50,7 @@ const options = {
       '/chef/dish/{id}': chefSwagger.dishById,
       '/client/': clientSwagger.createClient,
       '/client/me': clientSwagger.getUpdateClient,
+      '/client/me/favorite-dishes': clientSwagger.favoriteDish,
     },
   },
   apis: ['../routes/index.js'],
