@@ -72,14 +72,7 @@ const favoriteDish = {
       content: {
         'application/json': {
           schema: {
-            type: 'object',
-            properties: {
-              dishId: {
-                type: 'string',
-                example: '64adddb8ffed160fd72dc69c',
-              },
-            },
-            required: ['dishId'],
+            $ref: '#/components/schemas/Client',
           },
         },
       },
@@ -110,4 +103,26 @@ const favoriteDish = {
   },
 };
 
-module.exports = { createClient, getUpdateClient, favoriteDish };
+const deleteFavDish = {
+  delete: {
+    tags: ['Client'],
+    summary: 'Delete a favorite dish from the client',
+    parameters: [
+      {
+        in: 'path',
+        name: 'id',
+        required: true,
+      },
+    ],
+    responses: {
+      200: {
+        description: 'Favorite dish deleted successfully',
+      },
+      500: {
+        description: 'Server Error',
+      },
+    },
+  },
+};
+
+module.exports = { createClient, getUpdateClient, favoriteDish, deleteFavDish };
