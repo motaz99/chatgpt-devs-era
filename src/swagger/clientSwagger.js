@@ -125,4 +125,25 @@ const deleteFavDish = {
   },
 };
 
-module.exports = { createClient, getUpdateClient, favoriteDish, deleteFavDish };
+const orderHistory = {
+  get: {
+    tags: ['Client'],
+    summary: 'Get client order history',
+    responses: {
+      200: {
+        description: 'Client order history retrieved successfully',
+      },
+      500: {
+        description: 'Server Error',
+      },
+    },
+  },
+};
+
+module.exports = {
+  createClient,
+  getUpdateClient,
+  favoriteDish,
+  deleteFavDish,
+  orderHistory,
+};

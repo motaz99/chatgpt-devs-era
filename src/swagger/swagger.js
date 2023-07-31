@@ -52,6 +52,7 @@ const options = {
       '/client/me': clientSwagger.getUpdateClient,
       '/client/me/favorite-dishes': clientSwagger.favoriteDish,
       '/client/me/favorite-dishes/:id': clientSwagger.deleteFavDish,
+      '/client/me/order-history': clientSwagger.orderHistory,
     },
   },
   apis: ['../routes/index.js'],
