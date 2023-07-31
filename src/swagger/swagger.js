@@ -49,6 +49,7 @@ const options = {
       '/chef/dish/': chefSwagger.dish,
       '/chef/dish/{id}': chefSwagger.dishById,
       '/client/': clientSwagger.createClient,
+      '/client/me': clientSwagger.getUpdateClient,
     },
   },
   apis: ['../routes/index.js'],
