@@ -155,6 +155,32 @@ const getChefs = {
   },
 };
 
+const chefById = {
+  get: {
+    tags: ['Client'],
+    summary: 'Get chef by ID',
+    parameters: [
+      {
+        in: 'path',
+        name: 'id',
+        required: true,
+        schema: {
+          type: 'string',
+          example: '64adddb8ffed160fd72dc69c',
+        },
+      },
+    ],
+    responses: {
+      200: {
+        description: 'Chef information retrieved successfully',
+      },
+      500: {
+        description: 'Server Error',
+      },
+    },
+  },
+};
+
 module.exports = {
   createClient,
   getUpdateClient,
@@ -162,4 +188,5 @@ module.exports = {
   deleteFavDish,
   orderHistory,
   getChefs,
+  chefById,
 };
