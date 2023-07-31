@@ -29,7 +29,7 @@ const dishSchema = new mongoose.Schema({
     ],
     default: [],
   },
-ratingAve: {
+  ratingAve: {
     type: String,
     required: false,
   },
