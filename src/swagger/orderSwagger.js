@@ -7,7 +7,36 @@ const order = {
       content: {
         'application/json': {
           schema: {
-            $ref: '#/components/schemas/Order',
+            type: 'object',
+            properties: {
+              items: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    dishId: {
+                      type: 'string',
+                      example: '64adddb8ffed160fd72dc69c',
+                    },
+                    chefId: {
+                      type: 'string',
+                      example: '64adddb8ffed160fd72dc69c',
+                    },
+                    quantity: {
+                      type: 'integer',
+                      example: 2,
+                    },
+                  },
+                  required: ['dishId', 'chefId', 'quantity'],
+                },
+              },
+              status: {
+                type: 'string',
+                enum: ['pending', 'completed'],
+                example: 'pending',
+              },
+            },
+            required: ['items', 'status'],
           },
         },
       },

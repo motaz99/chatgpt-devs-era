@@ -54,7 +54,7 @@ const getUpdateClient = {
       content: {
         'application/json': {
           schema: {
-            $ref: '#/components/schemas/Client',
+            $ref: '#/components/schemas/UpdateClient',
           },
         },
       },
@@ -62,6 +62,13 @@ const getUpdateClient = {
     responses: {
       200: {
         description: 'Client information updated successfully',
+        content: {
+          'application/json': {
+            schema: {
+              $ref: '#/components/schemas/Client',
+            },
+          },
+        },
       },
       500: {
         description: 'Server Error',
@@ -79,7 +86,14 @@ const favoriteDish = {
       content: {
         'application/json': {
           schema: {
-            $ref: '#/components/schemas/Client',
+            type: 'object',
+            properties: {
+              dishId: {
+                type: 'string',
+                description: 'The ID of the dish to add to favorites',
+              },
+            },
+            required: ['dishId'],
           },
         },
       },
@@ -87,6 +101,13 @@ const favoriteDish = {
     responses: {
       200: {
         description: 'Favorite dish added successfully',
+        content: {
+          'application/json': {
+            schema: {
+              $ref: '#/components/schemas/Client',
+            },
+          },
+        },
       },
       400: {
         description: 'Bad Request',
@@ -102,6 +123,13 @@ const favoriteDish = {
     responses: {
       200: {
         description: 'Client favorite dishes retrieved successfully',
+        content: {
+          'application/json': {
+            schema: {
+              $ref: '#/components/schemas/Client',
+            },
+          },
+        },
       },
       500: {
         description: 'Server Error',
@@ -119,11 +147,22 @@ const deleteFavDish = {
         in: 'path',
         name: 'id',
         required: true,
+        schema: {
+          type: 'string',
+          format: 'ObjectId',
+        },
       },
     ],
     responses: {
       200: {
         description: 'Favorite dish deleted successfully',
+        content: {
+          'application/json': {
+            schema: {
+              $ref: '#/components/schemas/Client',
+            },
+          },
+        },
       },
       500: {
         description: 'Server Error',
@@ -139,6 +178,13 @@ const orderHistory = {
     responses: {
       200: {
         description: 'Client order history retrieved successfully',
+        content: {
+          'application/json': {
+            schema: {
+              $ref: '#/components/schemas/Client',
+            },
+          },
+        },
       },
       500: {
         description: 'Server Error',
@@ -154,6 +200,26 @@ const getChefs = {
     responses: {
       200: {
         description: 'Chefs retrieved successfully',
+        conten: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                message: {
+                  type: 'string',
+                  description: 'A success message',
+                },
+                data: {
+                  type: 'array',
+                  items: {
+                    $ref: '#/components/schemas/Chef',
+                  },
+                  description: 'An array of available chefs',
+                },
+              },
+            },
+          },
+        },
       },
       500: {
         description: 'Server Error',
@@ -173,13 +239,19 @@ const chefById = {
         required: true,
         schema: {
           type: 'string',
-          example: '64adddb8ffed160fd72dc69c',
         },
       },
     ],
     responses: {
       200: {
         description: 'Chef information retrieved successfully',
+        content: {
+          'application/json': {
+            schema: {
+              $ref: '#/components/schemas/Chef',
+            },
+          },
+        },
       },
       500: {
         description: 'Server Error',

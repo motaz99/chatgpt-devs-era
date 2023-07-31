@@ -202,4 +202,27 @@ const loginResponse = {
   },
 };
 
-module.exports = { user, chef, client, dish, order, loginUser, loginResponse };
+const updateClient = {
+  type: 'object',
+  properties: {
+    address: {
+      type: 'string',
+      example: '123 Main Street',
+    },
+    contactNumber: {
+      type: 'string',
+      example: '+1234567890',
+    },
+  },
+};
+
+module.exports = {
+  user,
+  chef,
+  client,
+  dish,
+  order,
+  loginUser,
+  loginResponse,
+  updateClient,
+};

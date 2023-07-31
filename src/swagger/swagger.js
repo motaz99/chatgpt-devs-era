@@ -28,6 +28,7 @@ const options = {
         Order: schema.order,
         LoginUser: schema.loginUser,
         LoginResponse: schema.loginResponse,
+        UpdateClient: schema.updateClient,
       },
     },
     securitySchemes: {
@@ -56,7 +57,10 @@ const options = {
         get: clientSwagger.getUpdateClient.get,
         put: clientSwagger.getUpdateClient.put,
       },
-      '/clients/me/favorite-dishes': clientSwagger.favoriteDish,
+      '/clients/me/favorite-dishes': {
+        post: clientSwagger.favoriteDish.post,
+        get: clientSwagger.favoriteDish.get,
+      },
       '/clients/me/favorite-dishes/:id': clientSwagger.deleteFavDish,
       '/clients/me/order-history': clientSwagger.orderHistory,
       '/clients/chefs': clientSwagger.getChefs,
