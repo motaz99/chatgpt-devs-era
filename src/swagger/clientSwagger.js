@@ -33,6 +33,13 @@ const getUpdateClient = {
     responses: {
       200: {
         description: 'Client information retrieved successfully',
+        content: {
+          'application/json': {
+            schema: {
+              $ref: '#/components/schemas/Client',
+            },
+          },
+        },
       },
       500: {
         description: 'Server Error',

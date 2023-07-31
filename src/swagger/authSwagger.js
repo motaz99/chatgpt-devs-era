@@ -35,14 +35,21 @@ const login = {
       content: {
         'application/json': {
           schema: {
-            $ref: '#/components/schemas/User',
+            $ref: '#/components/schemas/LoginUser',
           },
         },
       },
     },
     responses: {
-      201: {
+      200: {
         description: 'User logged in successfully',
+        content: {
+          'application/json': {
+            schema: {
+              $ref: '#/components/schemas/LoginResponse',
+            },
+          },
+        },
       },
       400: {
         description: 'Bad Request',
@@ -61,6 +68,23 @@ const logout = {
     responses: {
       200: {
         description: 'Logged out successfully',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                message: {
+                  type: 'string',
+                  example: 'Logged out successfully',
+                },
+                email: {
+                  type: 'string',
+                  example: 'stefan.zweig@email.com',
+                },
+              },
+            },
+          },
+        },
       },
       500: {
         description: 'Server Error',

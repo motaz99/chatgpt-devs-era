@@ -175,4 +175,31 @@ const order = {
   },
 };
 
-module.exports = { user, chef, client, dish, order };
+const loginUser = {
+  type: 'object',
+  properties: {
+    email: {
+      type: 'string',
+      format: 'email',
+      example: 'stefan.zweig@email.com',
+    },
+    password: {
+      type: 'string',
+      example: 'Password1',
+    },
+  },
+  required: ['email', 'password'],
+};
+
+const loginResponse = {
+  type: 'object',
+  properties: {
+    email: {
+      type: 'string',
+      format: 'email',
+      example: 'stefan.zweig@email.com',
+    },
+  },
+};
+
+module.exports = { user, chef, client, dish, order, loginUser, loginResponse };
