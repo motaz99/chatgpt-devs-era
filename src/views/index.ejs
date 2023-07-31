@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My Backend App</title>
+  <link rel="stylesheet" href="https://unpkg.com/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <script src="https://unpkg.com/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+  <script src="https://unpkg.com/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
+  <style>
+    body {
+      background-color: #e8f5e9;
+    }
+    .container {
+      background-color: #ffffff;
+      border-radius: 10px;
+      padding: 20px;
+    }
+    h1 {
+      color: #009966;
+      font-size: 2em;
+    }
+    h2 {
+      color: #006633;
+    }
+    p {
+      color: #333333;
+    }
+    ul {
+      color: #333333;
+    }
+    li {
+      margin-bottom: 10px;
+    }
+    .team-member-card {
+    background-color: #f5f5f5;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.2s;
+  }
+  .team-member-card img {
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+  }
+  .team-member-card:hover {
+    transform: translateY(-5px);
+  }
+
+  .member-info {
+    margin-top: 10px;
+  }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+          <div class="container-fluid">
+            <a class="navbar-brand" href="#">Cookiz</a>
+            <button
+              class="navbar-toggler"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#navbarNav"
+              aria-controls="navbarNav"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+              <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                  <a class="nav-link" href="#">Home</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#api-docs">API Documentation</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#github">Github Repository</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+      </header>
+    <main>
+      <section id="home">
+        <h2>Project Idea and Concept</h2>
+        <p>
+           Cookiz is a website that aims to connect customers with local cooks who offer homemade food. 
+           The objective of the website is to support local cookers and provide a platform for customers, 
+           particularly those with limited time availability to cook, such as students, 
+           to access a variety of delicious homemade dishes.
+         </p>
+      </section>
+      <section id="project">
+        <h2>Target Audience</h2>
+        <p>
+          The target audience for the website includes people who do not have the time or skills to cook their own meals, 
+          primarily focusing on students and individuals who prefer homemade food. 
+          The website will cater to users of all genders and ages, particularly those within the student demographic. 
+          The primary language of the website will be determined based on the location of the target audience.
+        </p>
+      </section>
+      <section id="project">
+        <h2>Cookiz functionalities</h2>
+        <p>
+          <strong>1. User Registration:</strong> Cookiz offers user registration, allowing individuals to sign up for the application and select their desired role as either a chef or a client.
+          <br>
+          <strong>2. Chef and Client Profile:</strong> Upon successful registration, users are prompted to provide essential information related to their role as a chef or a client, ensuring a personalized experience within the app.
+          <br>
+          <strong>3. Chef Privileges:</strong> For registered chefs, Cookiz provides a range of exclusive features. Chefs can create and showcase their delectable dishes, manage incoming orders from clients, and exercise control over accepting or rejecting orders through the designated orders endpoint.
+          <br>
+          <strong>4. Client Exploration:</strong> Clients can explore a diverse selection of available chefs, gaining insights into their culinary offerings. By visiting individual chef pages, clients can view detailed information about the dishes provided by each chef and conveniently place orders for their favorite meals.
+          <br>
+          <strong>5. User Account Management:</strong> Cookiz prioritizes user convenience and allows both clients and chefs to manage their accounts efficiently. Users have the flexibility to log out at any time for enhanced security and can easily reset their passwords when required.
+        </p>
+      </section>
+      <section id="technologies" class="mt-4">
+        <h2 class="mb-5">Technologies Used</h2>
+        <div class="row ms-5">
+          <div class="col-md-4 mb-3">
+            <i class="fab fa-node-js fa-2x text-success"></i>
+            <p>Node.js</p>
+          </div>
+          <div class="col-md-4 mb-3">
+            <i class="fab fa-js-square fa-2x text-warning"></i>
+            <p>Express</p>
+          </div>
+          <div class="col-md-4 mb-3">
+            <i class="fas fa-database fa-2x text-success"></i>
+            <p>MongoDB</p>
+          </div>
+          <div class="col-md-4 mb-3">
+            <i class="fas fa-dice-d20 fa-2x text-success"></i>
+            <p>Mongoose</p>
+          </div>
+          <div class="col-md-4 mb-3">
+            <i class="fab fa-html5 fa-2x text-danger"></i>
+            <p>EJS (Embedded JavaScript)</p>
+          </div>
+          <div class="col-md-4 mb-3">
+            <i class="fab fa-passport fa-2x text-info"></i>
+            <p>Passport.js</p>
+          </div>
+          <div class="col-md-4 mb-3">
+            <i class="fas fa-key fa-2x text-success"></i>
+            <p>JSON Web Tokens (JWT)</p>
+          </div>
+          <div class="col-md-4 mb-3">
+            <i class="fas fa-lock fa-2x text-warning"></i>
+            <p>Bcrypt</p>
+          </div>
+          <div class="col-md-4 mb-3">
+            <i class="far fa-clipboard fa-2x text-primary"></i>
+            <p>Cookie-parser</p>
+          </div>
+          <div class="col-md-4 mb-3">
+            <i class="fas fa-envelope fa-2x text-secondary"></i>
+            <p>Body-parser</p>
+          </div>
+          <div class="col-md-4 mb-3">
+            <i class="fas fa-envelope fa-2x text-danger"></i>
+            <p>Nodemailer</p>
+          </div>
+          <div class="col-md-4 mb-3">
+            <i class="fab fa-bootstrap fa-2x text-info"></i>
+            <p>Bootstrap</p>
+          </div>
+          <div class="col-md-4 mb-3">
+            <i class="fab fa-figma fa-2x text-success"></i>
+            <p>Figma</p>
+          </div>
+          <div class="col-md-4 mb-3">
+            <i class="fas fa-js fa-2x text-warning"></i>
+            <p>Jest</p>
+          </div>
+          <div class="col-md-4 mb-3">
+            <i class="fas fa-code fa-2x text-primary"></i>
+            <p>Eslint</p>
+          </div>
+          <div class="col-md-4 mb-3">
+            <i class="fas fa-check fa-2x text-secondary"></i>
+            <p>Prettier</p>
+          </div>
+          <div class="col-md-4 mb-3">
+            <i class="fas fa-code fa-2x text-danger"></i>
+            <p>Husky</p>
+          </div>
+          <div class="col-md-4 mb-3">
+            <i class="fas fa-check fa-2x text-info"></i>
+            <p>lint-staged</p>
+          </div>
+        </div>
+      </section>      
+      <section id="architecture" class="mt-4">
+        <h2 class="mb-5">System Architecture & Database Schema Diagrams</h2>
+        <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FAavCuzuZfcP49FQ42d8m2A%2FCOOKIZ-Project%3Ftype%3Ddesign%26node-id%3D0%253A1%26mode%3Ddesign%26t%3DdTZlQnrRnJNDoFpp-1" allowfullscreen></iframe>    
+        <section id="team" class="mt-4">
+          <h2 class="mb-5">Team Members</h2>
+          <div class="row">
+            <div class="col-md-6 mb-4">
+              <div class="team-member-card">
+                <img src="/team_images/ozlem.jpg" alt="Team Member 1" class="rounded-circle" width="150">
+                <div class="member-info">
+                  <p>Özlem Keleş</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 mb-4">
+              <div class="team-member-card">
+                <img src="/team_images/tesnim.jpg" alt="Team Member 2" class="rounded-circle" width="150">
+                <div class="member-info">
+                  <p>Tesnim Nakilci</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 mb-4">
+              <div class="team-member-card">
+                <img src="/team_images/harith.png" alt="Team Member 3" class="rounded-circle" width="150">
+                <div class="member-info">
+                  <p>Harith Riyadh</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 mb-4">
+              <div class="team-member-card">
+                <img src="/team_images/motaz.jpg" alt="Team Member 4" class="rounded-circle" width="150">
+                <div class="member-info">
+                  <p>Motaz Ali</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        
+      <section id="api-docs" class="mt-5 mb-5">
+        <h2>API Documentation</h2>
+        <p>
+          Our application's API documentation is conveniently provided through Swagger, a powerful tool for describing, producing, and consuming RESTful web services. Swagger allows developers and users to interact with our API in a user-friendly and standardized manner, making it easier to understand the available endpoints, request and response formats, and authentication requirements.
+      
+          With Swagger, you can explore and test our API's functionalities, see example requests and responses, and even try out the endpoints directly from the Swagger interface.
+      
+          To view the API documentation, simply click on the button below. Happy exploring!
+        </p>
+        <a href="#" class="btn btn-success">View API Documentation</a>
+      </section>
+      
+      <section id="github" class="mt-5 mb-5">
+        <h2>Github Repository</h2>
+        <p>
+          Our application's source code is hosted on GitHub, the world's leading platform for version control and collaborative software development. GitHub allows developers to work together, contribute to projects, and manage code repositories efficiently.
+      
+          Our GitHub repository contains the entire codebase of our application, including the server-side logic, database schemas, front-end components, and much more. It showcases the collaborative effort that has gone into building and maintaining this project.
+      
+          Feel free to explore our repository, check out the latest updates, and even contribute if you wish! Simply click on the button below to access the GitHub repository.
+        </p>
+        <a href="https://github.com/motaz99/chatgpt-devs-era" target="_blank" class="btn btn-success">View GitHub Repository</a>
+      </section>
+    </main>
+    <footer class="text-center">
+      <p>Copyright &copy; Chatgpt-Devs-Era Team</p>
+    </footer>
+  </div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>
