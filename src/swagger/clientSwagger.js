@@ -140,10 +140,26 @@ const orderHistory = {
   },
 };
 
+const getChefs = {
+  get: {
+    tags: ['Client'],
+    summary: 'Get chefs',
+    responses: {
+      200: {
+        description: 'Chefs retrieved successfully',
+      },
+      500: {
+        description: 'Server Error',
+      },
+    },
+  },
+};
+
 module.exports = {
   createClient,
   getUpdateClient,
   favoriteDish,
   deleteFavDish,
   orderHistory,
+  getChefs,
 };
