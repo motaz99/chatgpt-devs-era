@@ -3,6 +3,7 @@ const schema = require('./schemasSwagger');
 const authSwagger = require('./authSwagger');
 const chefSwagger = require('./chefSwagger');
 const clientSwagger = require('./clientSwagger');
+const orderSwagger = require('./orderSwagger');
 
 const options = {
   definition: {
@@ -55,6 +56,7 @@ const options = {
       '/client/me/order-history': clientSwagger.orderHistory,
       '/client/chefs': clientSwagger.getChefs,
       '/client/chefs/:id': clientSwagger.chefById,
+      '/orders/': orderSwagger,
     },
   },
   apis: ['../routes/index.js'],
