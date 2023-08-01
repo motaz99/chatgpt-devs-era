@@ -32,6 +32,12 @@ jobs:
         with:
           mongodb-version: ${{ matrix.mongodb-version }}
 
+      - name: Clear yarn cache
+        run: yarn cache clean
+
+      - name: Clear npm cache
+        run: npm cache clean --force
+
       - run: yarn install
 
       - run: yarn test
