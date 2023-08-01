@@ -34,10 +34,6 @@ const user = {
 const chef = {
   type: 'object',
   properties: {
-    userId: {
-      type: 'string',
-      example: '64adddb8ffed160fd72dc69c',
-    },
     restaurant: {
       type: 'string',
       example: 'Pizza House',
@@ -64,7 +60,6 @@ const chef = {
     },
   },
   required: [
-    'userId',
     'restaurant',
     'location',
     'openingHours',
@@ -106,20 +101,12 @@ const client = {
       },
     },
   },
-  required: ['userId', 'address', 'contactNumber'],
+  required: ['address', 'contactNumber'],
 };
 
 const dish = {
   type: 'object',
   properties: {
-    chefId: {
-      type: 'string',
-      example: '64adddb8ffed160fd72dc69c',
-    },
-    userId: {
-      type: 'string',
-      example: '64adddb8ffed160fd72dc69c',
-    },
     name: {
       type: 'string',
       example: 'Mediterranean Pizza',
@@ -137,7 +124,7 @@ const dish = {
       example: '4.5',
     },
   },
-  required: ['chefId', 'userId', 'name', 'description', 'price'],
+  required: ['name', 'description', 'price'],
 };
 
 const order = {

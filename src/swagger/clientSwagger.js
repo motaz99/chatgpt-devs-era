@@ -144,12 +144,11 @@ const deleteFavDish = {
     summary: 'Delete a favorite dish from the client',
     parameters: [
       {
-        in: 'path',
         name: 'id',
+        in: 'path',
         required: true,
         schema: {
           type: 'string',
-          format: 'ObjectId',
         },
       },
     ],
@@ -234,8 +233,8 @@ const chefById = {
     summary: 'Get chef by ID',
     parameters: [
       {
-        in: 'path',
         name: 'id',
+        in: 'path',
         required: true,
         schema: {
           type: 'string',

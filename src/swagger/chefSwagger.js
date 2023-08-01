@@ -15,6 +15,13 @@ const createChef = {
     responses: {
       201: {
         description: 'Chef created successfully',
+        content: {
+          'application/json': {
+            schema: {
+              $ref: '#/components/schemas/Chef',
+            },
+          },
+        },
       },
       400: {
         description: 'Bad Request',
