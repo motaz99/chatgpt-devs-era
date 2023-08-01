@@ -32,9 +32,7 @@ exports.getClient = async (req, res) => {
   try {
     const token = req.cookies.jwt;
     const decodedToken = decodeJwtToken(token);
-    const client = await Client.findOne({
-      userId: decodedToken.userId,
-    }).populate('userId');
+    const client = await Client.findOne({ userId: decodedToken.userId });
 
     res.status(200).json({ message: 'Client information page', data: client });
   } catch (error) {
