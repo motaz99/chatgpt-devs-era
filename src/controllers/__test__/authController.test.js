@@ -44,6 +44,7 @@ describe('login', () => {
   // });
 
   it('should not login a user with invalid credentials', async () => {
+    // Just to make the action rerun
     const req = {
       body: {
         email: user.email,
