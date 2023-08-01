@@ -44,6 +44,6 @@ router.get(
 
 router.get('/chefs/:id', isUserCreatedClient, clientController.getChefById);
 
-router.post('/search', isUserCreatedClient, searchController.searchDish);
+router.get('/search', isUserCreatedClient, clientController.searchDish);
 
 module.exports = router;
