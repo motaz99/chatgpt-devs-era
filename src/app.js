@@ -1,5 +1,5 @@
-const express = require('express');
 const path = require('path');
+const express = require('express');
 require('dotenv').config();
 const passport = require('passport');
 const cookieParser = require('cookie-parser');
