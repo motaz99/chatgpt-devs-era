@@ -5,7 +5,10 @@ const passport = require('passport');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const ejs = require('ejs');
+const swaggerUi = require('swagger-ui-express');
+const swaggerJsdoc = require('swagger-jsdoc');
 const passportGoogleSetup = require('./passport-configuration/passport-google-setup');
+const swaggerOptions = require('./swagger/swagger');
 const db = require('./db');
 const apiRoutes = require('./routes');
 
@@ -20,6 +23,16 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'views')));
 const port = process.env.NODE_LOCAL_PORT;
+
+app.get('/api-docs.json', (req, res) => {
+  res.json(swaggerOptions);
+});
+
+app.use(
+  '/api-docs',
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerOptions, { explorer: true })
+);
 
 app.use('/api', apiRoutes);
 app.get('/home-page', (req, res) => {
