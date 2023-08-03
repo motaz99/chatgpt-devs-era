@@ -1,3 +1,4 @@
+const generateToken = require('../helpers/generateToken');
 const User = require('../models/User');
 
 const googleCallback = async (req, res) => {
@@ -9,32 +10,24 @@ const googleCallback = async (req, res) => {
     });
 
     if (currentUser) {
-      /* We need to create the token and push inside the cookie at this point because the user logged in
-           but for now will keep it as comment because we don't have front-end the cookie or the session will
-           hold us back at this point
-        */
+      const token = generateToken(currentUser);
+      res.cookie('jwt', token, {
+        httpOnly: true,
+        maxAge: 14 * 24 * 60 * 60 * 1000,
+      });
 
-      // We need to send him directly to his dashboard page
       if (currentUser.role === 'chef') {
-        // we will redirect him to the chef dashboard page which is I think the order page
-        res.json({
-          message:
-            'Here we have to have the chef dashboard page instead of this message',
-        });
+        res.redirect('/api/chef/me');
       }
 
       if (currentUser.role === 'client') {
-        // we will redirect him to the chef dashboard page which is I think the order page
-        res.json({
-          message:
-            'Here we have to have the client dashboard page instead of this message',
-        });
+        res.redirect('/api/clients/chefs');
       }
 
       if (currentUser.role === 'user') {
-        // we will redirect him to the chef dashboard page which is I think the order page
         res.json({
-          message: 'Here we have to redirect the user to decide his role',
+          message: `You haven't chosen your role yet`,
+          method: `Do PUT request on '/api/role' and send the role you want by sending for example "role": "client"`,
         });
       }
     }
@@ -49,18 +42,18 @@ const googleCallback = async (req, res) => {
       type: 'google-user',
       role: 'user',
     });
-    /* We need to create the token and push inside the cookie at this point because the user logged in
-           but for now will keep it as comment because we don't have front-end the cookie or the session will
-           hold us back at this point
-      */
 
-    // After we create the user we need to send him to decide his role
+    const token = generateToken(newUser);
+    res.cookie('jwt', token, {
+      httpOnly: true,
+      maxAge: 14 * 24 * 60 * 60 * 1000,
+    });
     res.json({
-      message: 'Here we have to redirect the user to decide his role',
-      newUser,
+      message: `You have to pick you role on '/api/role'`,
+      method: `Do PUT request on '/api/role' and send the role you want by sending for example "role": "client"`,
     });
   } catch (error) {
-    console.log(error);
+    res.status(500).json({ error: error.message });
   }
 
   res.end();
