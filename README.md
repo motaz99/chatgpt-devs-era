@@ -275,7 +275,7 @@ Parameters:
 Example URL: `/chef/dish/12345`
 
 **24. Create Order**  
-Description: Creates a new order for the client  
+Description: Allows a client to create a new order   
 Endpoint: `/orders`  
 Method: POST  
 Request Body:
@@ -299,7 +299,7 @@ Parameters:
 Example URL: `/orders/cancel-order/12345`
 
 **26. Get Chef Orders**  
-Description: Retrieves a list of orders received by a specific chef  
+Description: Allows a chef to retrieve a list of their orders  
 Endpoint: `/orders/chef-orders`  
 Method: GET  
 
