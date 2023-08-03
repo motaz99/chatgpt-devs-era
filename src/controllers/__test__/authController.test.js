@@ -188,3 +188,86 @@ describe('logout', () => {
     expect(res.send).toHaveBeenCalledWith('Logged out successfully');
   });
 });
+
+describe('passwordReset', () => {
+  it('should reset password for a user', async () => {
+    const req = {
+      body: {
+        email: 'test@test.com',
+        newPassword: 'newPassword123',
+      },
+    };
+    const res = {
+      json: jest.fn(),
+    };
+
+    const findOneMock = jest.fn().mockResolvedValue({
+      email: 'test@test.com',
+      save: jest.fn(),
+    });
+
+    User.findOne = findOneMock;
+    bcrypt.hash = jest.fn().mockResolvedValue('hashedPassword123');
+
+    await auth.passwordReset(req, res);
+
+    expect(findOneMock).toHaveBeenCalledTimes(1);
+    expect(findOneMock).toHaveBeenCalledWith({ email: 'test@test.com' });
+    expect(bcrypt.hash).toHaveBeenCalledTimes(1);
+    expect(bcrypt.hash).toHaveBeenCalledWith('newPassword123', 10);
+    expect(res.json).toHaveBeenCalledTimes(1);
+    expect(res.json).toHaveBeenCalledWith({
+      message: 'Password reset successful',
+    });
+  });
+
+  it('should handle user not found', async () => {
+    const req = {
+      body: {
+        email: 'nonexistent@test.com',
+        newPassword: 'newPassword123',
+      },
+    };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    User.findOne = jest.fn().mockResolvedValue(null);
+
+    await auth.passwordReset(req, res);
+
+    expect(User.findOne).toHaveBeenCalledTimes(1);
+    expect(User.findOne).toHaveBeenCalledWith({
+      email: 'nonexistent@test.com',
+    });
+    expect(res.status).toHaveBeenCalledTimes(1);
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledTimes(1);
+    expect(res.json).toHaveBeenCalledWith({ error: 'User not found' });
+  });
+
+  it('should handle server error', async () => {
+    const req = {
+      body: {
+        email: 'test@test.com',
+        newPassword: 'newPassword123',
+      },
+    };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    User.findOne = jest.fn().mockRejectedValue(new Error('Database error'));
+
+    await auth.passwordReset(req, res);
+
+    expect(User.findOne).toHaveBeenCalledTimes(1);
+    expect(User.findOne).toHaveBeenCalledWith({ email: 'test@test.com' });
+    expect(res.status).toHaveBeenCalledTimes(1);
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledTimes(1);
+    expect(res.json).toHaveBeenCalledWith({ error: 'Database error' });
+  });
+});
