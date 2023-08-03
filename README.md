@@ -106,7 +106,6 @@ Method: PUT
 Request Body:
 ```json
 {
-    "providerId": "",
     "role": "client"
 }
 ```
