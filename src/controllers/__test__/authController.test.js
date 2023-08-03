@@ -171,3 +171,20 @@ describe('signup', () => {
   //   });
   // });
 });
+
+describe('logout', () => {
+  it('should clear jwt cookie and send success response', async () => {
+    const req = {};
+    const res = {
+      clearCookie: jest.fn(),
+      send: jest.fn(),
+    };
+
+    await auth.logout(req, res);
+
+    expect(res.clearCookie).toHaveBeenCalledTimes(1);
+    expect(res.clearCookie).toHaveBeenCalledWith('jwt');
+    expect(res.send).toHaveBeenCalledTimes(1);
+    expect(res.send).toHaveBeenCalledWith('Logged out successfully');
+  });
+});
