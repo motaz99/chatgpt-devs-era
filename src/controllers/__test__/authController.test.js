@@ -79,3 +79,95 @@ describe('login', () => {
     });
   });
 });
+
+describe('signup', () => {
+  const newUser = {
+    firstname: 'Test',
+    lastname: 'Test',
+    email: 'test@test.com',
+    password: 'password',
+    role: 'user',
+  };
+
+  it('should create a new user', async () => {
+    const req = {
+      body: newUser,
+      cookies: {},
+    };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+      cookie: jest.fn(),
+    };
+
+    User.findOne = jest.fn().mockResolvedValue(null);
+    bcrypt.hash = jest.fn().mockResolvedValue('hashedPassword123');
+    User.create = jest.fn().mockResolvedValue(newUser);
+
+    await auth.signup(req, res);
+
+    expect(User.findOne).toHaveBeenCalledTimes(1);
+    expect(bcrypt.hash).toHaveBeenCalledTimes(1);
+    expect(User.create).toHaveBeenCalledTimes(1);
+    expect(res.status).toHaveBeenCalledTimes(1);
+    expect(res.status).toHaveBeenCalledWith(201);
+    expect(res.json).toHaveBeenCalledTimes(1);
+    expect(res.json).toHaveBeenCalledWith({
+      message:
+        'You have signed up successfully, and now you are a logged in user',
+      next: `You now need to fill the ${newUser.role} information`,
+    });
+    expect(res.cookie).toHaveBeenCalledTimes(1);
+  });
+
+  it('should handle email already registered', async () => {
+    const req = {
+      body: newUser,
+      cookies: {},
+    };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+      cookie: jest.fn(),
+    };
+
+    User.findOne = jest.fn().mockResolvedValue({ email: newUser.email });
+
+    await auth.signup(req, res);
+
+    expect(User.findOne).toHaveBeenCalledTimes(1);
+    expect(res.status).toHaveBeenCalledTimes(1);
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledTimes(1);
+    expect(res.json).toHaveBeenCalledWith({
+      error: 'Email is already registered',
+    });
+  });
+
+  // it('should handle empty password', async () => {
+  //   const req = {
+  //     body: {
+  //       firstname: 'Test',
+  //       lastname: 'User',
+  //       email: 'test@user.com',
+  //       password: '',
+  //       role: 'user',
+  //     },
+  //     cookies: {},
+  //   };
+  //   const res = {
+  //     status: jest.fn().mockReturnThis(),
+  //     json: jest.fn(),
+  //     cookie: jest.fn(),
+  //   };
+
+  //   await auth.signup(req, res);
+
+  //   expect(res.status).toHaveBeenCalledTimes(1);
+  //   expect(res.status).toHaveBeenCalledWith(500);
+  //   expect(res.json).toHaveBeenCalledTimes(1);
+  //   expect(res.json).toHaveBeenCalledWith({
+  //     error: 'Need to set a password',
+  //   });
+  // });
+});
