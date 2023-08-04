@@ -55,8 +55,6 @@ const googleCallback = async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
-
-  res.end();
 };
 
 const logout = (req, res) => {
