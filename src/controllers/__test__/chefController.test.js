@@ -230,3 +230,95 @@ describe('Chef Controller - getChefInfo', () => {
     });
   });
 });
+
+describe('editChefInfo', () => {
+  it('should update the chef info and return the updated chef object', async () => {
+    const req = {
+      body: {
+        restaurant: 'Updated Restaurant',
+        location: 'Updated Location',
+        openingHours: '09:00 AM',
+        closingHours: '06:00 PM',
+        contactNumber: '9876543210',
+        description: 'Updated Description',
+      },
+      cookies: {
+        jwt: 'mocked-jwt-token',
+      },
+    };
+
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    const mockChef = {
+      id: 'mocked-chef-id',
+      userId: 'mocked-user-id',
+      restaurant: 'Test Restaurant',
+      location: 'Test Location',
+      openingHours: '09:00 AM',
+      closingHours: '06:00 PM',
+      contactNumber: '1234567890',
+      description: 'Test Description',
+    };
+
+    Chef.findOneAndUpdate.mockResolvedValue(mockChef);
+
+    decodeJwtToken.mockReturnValue({ userId: 'mocked-user-id' });
+
+    await chefControllers.editChefInfo(req, res);
+
+    expect(Chef.findOneAndUpdate).toHaveBeenCalledWith(
+      { userId: 'mocked-user-id' },
+      req.body,
+      { new: true }
+    );
+
+    expect(res.status).toHaveBeenCalledWith(201);
+    expect(res.json).toHaveBeenCalledWith({
+      message: 'Chef object got updated',
+      data: mockChef,
+    });
+  });
+
+  it('should handle errors and send a 500 status with error message', async () => {
+    const req = {
+      body: {
+        restaurant: 'Updated Restaurant',
+        location: 'Updated Location',
+        openingHours: '09:00 AM',
+        closingHours: '06:00 PM',
+        contactNumber: '9876543210',
+        description: 'Updated Description',
+      },
+      cookies: {
+        jwt: 'mocked-jwt-token',
+      },
+    };
+
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    Chef.findOneAndUpdate.mockRejectedValue(
+      new Error('An unexpected error occurred')
+    );
+
+    decodeJwtToken.mockReturnValue({ userId: 'mocked-user-id' });
+
+    await chefControllers.editChefInfo(req, res);
+
+    expect(Chef.findOneAndUpdate).toHaveBeenCalledWith(
+      { userId: 'mocked-user-id' },
+      req.body,
+      { new: true }
+    );
+
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({
+      error: 'An unexpected error occurred',
+    });
+  });
+});
