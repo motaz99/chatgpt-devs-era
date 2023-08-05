@@ -44,7 +44,45 @@ describe('createChef', () => {
   });
 
   it('should handle the case when the chef already exists', async () => {
-    // I need to add test case here
+    const req = {
+      body: {
+        restaurant: 'Test Restaurant',
+        location: 'Test Location',
+        openingHours: '09:00 AM',
+        closingHours: '06:00 PM',
+        contactNumber: '1234567890',
+        description: 'Test Description',
+      },
+      cookies: {
+        jwt: 'mocked-jwt-token',
+      },
+    };
+
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    decodeJwtToken.mockReturnValue({ userId: 'mocked-user-id' });
+
+    const existingChef = {
+      _id: 'existing_chef_id',
+      userId: 'mocked-user-id',
+      restaurant: 'Existing Restaurant',
+      location: 'Existing Location',
+      openingHours: '09:00 AM',
+      closingHours: '06:00 PM',
+      contactNumber: '1234567890',
+      description: 'Existing Description',
+    };
+    Chef.findOne.mockResolvedValue(existingChef);
+
+    await chefControllers.createChef(req, res);
+
+    expect(Chef.findOne).toHaveBeenCalledTimes(1);
+    expect(Chef.create).not.toHaveBeenCalled();
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({ error: 'Chef already exists.' });
   });
 
   it('should handle errors and send a 500 status with error message', async () => {
