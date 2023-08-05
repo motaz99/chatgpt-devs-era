@@ -211,6 +211,22 @@ describe('Chef Controller - getChefInfo', () => {
   });
 
   it('should handle authentication errors for missing req.cookies.jwt', async () => {
-    // Your test case here
+    const req = {
+      cookies: {},
+    };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    decodeJwtToken.mockReturnValue({ userId: 'mocked-user-id' });
+
+    await chefControllers.getChefInfo(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({
+      error: 'Server error',
+      message: 'An unexpected error occurred',
+    });
   });
 });
