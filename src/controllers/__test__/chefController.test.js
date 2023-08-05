@@ -185,7 +185,29 @@ describe('Chef Controller - getChefInfo', () => {
   });
 
   it('should handle errors and send a 500 status with error message', async () => {
-    // Your test case here
+    const req = {
+      cookies: {
+        jwt: 'mocked-jwt-token',
+      },
+    };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    decodeJwtToken.mockReturnValue({ userId: 'mocked-user-id' });
+
+    const errorMessage = 'An unexpected error occurred';
+    Chef.findOne.mockRejectedValue(new Error(errorMessage));
+
+    await chefControllers.getChefInfo(req, res);
+
+    expect(Chef.findOne).toHaveBeenCalledTimes(1);
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({
+      error: 'Server error',
+      message: errorMessage,
+    });
   });
 
   it('should handle authentication errors for missing req.cookies.jwt', async () => {
