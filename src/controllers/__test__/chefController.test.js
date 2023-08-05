@@ -144,3 +144,51 @@ describe('createChef', () => {
     });
   });
 });
+
+describe('Chef Controller - getChefInfo', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should get the chef information and respond with status 200', async () => {
+    const req = {
+      cookies: {
+        jwt: 'mocked-jwt-token',
+      },
+    };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    decodeJwtToken.mockReturnValue({ userId: 'mocked-user-id' });
+
+    const mockChef = {
+      _id: 'mocked-chef-id',
+      restaurant: 'Test Restaurant',
+      location: 'Test Location',
+      openingHours: '09:00 AM',
+      closingHours: '06:00 PM',
+      contactNumber: '1234567890',
+      description: 'Test Description',
+    };
+    Chef.findOne.mockResolvedValue(mockChef);
+
+    await chefControllers.getChefInfo(req, res);
+
+    expect(Chef.findOne).toHaveBeenCalledTimes(1);
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({
+      message: 'Chef information page',
+      data: mockChef,
+    });
+  });
+
+  it('should handle errors and send a 500 status with error message', async () => {
+    // Your test case here
+  });
+
+  it('should handle authentication errors for missing req.cookies.jwt', async () => {
+    // Your test case here
+  });
+});
