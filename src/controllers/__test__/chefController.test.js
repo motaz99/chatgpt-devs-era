@@ -107,12 +107,40 @@ describe('createChef', () => {
 
     decodeJwtToken.mockReturnValue({ userId: 'mocked-user-id' });
 
-    Chef.findOne.mockRejectedValue(new Error('Mocked error'));
+    Chef.findOne.mockRejectedValue(new Error('An unexpected error occurred'));
 
     await chefControllers.createChef(req, res);
 
     expect(Chef.findOne).toHaveBeenCalledTimes(1);
     expect(res.status).toHaveBeenCalledWith(500);
-    expect(res.json).toHaveBeenCalledWith({ error: 'Mocked error' });
+    expect(res.json).toHaveBeenCalledWith({
+      error: 'An unexpected error occurred',
+    });
+  });
+
+  it('should handle authentication errors for missing req.cookies.jwt', async () => {
+    const req = {
+      body: {
+        restaurant: 'Test Restaurant',
+        location: 'Test Location',
+        openingHours: '09:00 AM',
+        closingHours: '06:00 PM',
+        contactNumber: '1234567890',
+        description: 'Test Description',
+      },
+      cookies: {},
+    };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+    decodeJwtToken.mockReturnValue({ userId: 'mocked-user-id' });
+
+    await chefControllers.createChef(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({
+      error: 'An unexpected error occurred',
+    });
   });
 });
