@@ -6,6 +6,19 @@ exports.createDish = async (req, res) => {
   const token = req.cookies.jwt;
   const decodedToken = decodeJwtToken(token);
   const { name, description, price, rating } = req.body;
+
+  if (!name) {
+    res.status(500).json({ error: 'Name is required' });
+  }
+
+  if (!description) {
+    res.status(500).json({ error: 'Description is required' });
+  }
+
+  if (!price) {
+    res.status(500).json({ error: 'Price is required' });
+  }
+
   try {
     const chef = await Chef.findOne({ userId: decodedToken.userId });
     const checkDish = await Dish.findOne({ name, chefId: chef._id });
@@ -54,7 +67,7 @@ exports.getDishById = async (req, res) => {
       throw new Error('Dish not found');
     }
 
-    res.json({ message: 'Get specif dish using the dish Id', data: dish });
+    res.json({ message: 'Get specific dish using the dish Id', data: dish });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -72,7 +85,6 @@ exports.deleteDishById = async (req, res) => {
 
     res.json({ message: 'Dish deleted successfully' });
   } catch (err) {
-    console.error(err);
     res.status(500).json({ error: 'Server error' });
   }
 };
