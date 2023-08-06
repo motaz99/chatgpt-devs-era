@@ -404,3 +404,95 @@ describe('chefUpdateOrderStatus', () => {
     });
   });
 });
+
+describe('clientCancelOrder', () => {
+  it('should cancel the order successfully', async () => {
+    const orderId = 'mocked-order-id';
+    const token = 'mocked-jwt-token';
+    const decodedToken = {
+      userId: 'mocked-user-id',
+      firstname: 'Mock',
+      lastname: 'User',
+    };
+
+    const req = {
+      cookies: {
+        jwt: token,
+      },
+      params: {
+        id: orderId,
+      },
+    };
+
+    const order = {
+      _id: orderId,
+      status: 'pending',
+      chefId: {
+        populate: jest.fn(() => ({
+          userId: {
+            email: 'chef@example.com',
+          },
+        })),
+      },
+      dishId: {
+        name: 'Mock Dish',
+      },
+    };
+
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    decodeJwtToken.mockReturnValue(decodedToken);
+
+    Order.findById.mockResolvedValue(order);
+    Order.findByIdAndDelete.mockResolvedValue(order);
+
+    sendEmail.mockResolvedValue();
+
+    await orderController.clientCancelOrder(req, res);
+
+    expect(Order.findById).toHaveBeenCalledTimes(1);
+    expect(Order.findByIdAndDelete).toHaveBeenCalledTimes(1);
+    expect(order.chefId.populate).toHaveBeenCalled();
+    expect(sendEmail).toHaveBeenCalledWith(
+      order.chefId.populate().userId.email,
+      'Order status update',
+      `The client '${decodedToken.firstname} ${decodedToken.lastname}' has been canceled his order with the name '${order.dishId.name}'`
+    );
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({
+      message: 'Order cancelled successfully',
+    });
+  });
+
+  it('should handle errors', async () => {
+    const orderId = 'mocked-order-id';
+    const token = 'mocked-jwt-token';
+
+    const req = {
+      cookies: {
+        jwt: token,
+      },
+      params: {
+        id: orderId,
+      },
+    };
+
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    Order.findById.mockRejectedValue(new Error('Mocked Error'));
+
+    await orderController.clientCancelOrder(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({
+      message: 'Failed to cancel order',
+      error: 'Mocked Error',
+    });
+  });
+});
