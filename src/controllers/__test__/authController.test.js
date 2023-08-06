@@ -2,12 +2,11 @@ const bcrypt = require('bcrypt');
 const User = require('../../models/User');
 const auth = require('../authController');
 
-describe('login', () => {
-  const user = {
-    email: 'test@test.com',
-    password: 'password',
-  };
+afterEach(() => {
+  jest.clearAllMocks();
+});
 
+describe('login', () => {
   // WE WILL COMMENT THIS FOR NOW CUZ IT MAKING THE TEST FAIL IN GITHUB ACTIONS PAGE
   // BUT LATER ON WE NEED TO USE A DEFERENT APPROACH DO IT
 
@@ -47,6 +46,11 @@ describe('login', () => {
   // });
 
   it('should not login a user with invalid credentials', async () => {
+    const user = {
+      email: 'test@test.com',
+      password: 'password',
+    };
+
     const req = {
       body: {
         email: user.email,
@@ -81,15 +85,14 @@ describe('login', () => {
 });
 
 describe('signup', () => {
-  const newUser = {
-    firstname: 'Test',
-    lastname: 'Test',
-    email: 'test@test.com',
-    password: 'password',
-    role: 'user',
-  };
-
   it('should create a new user', async () => {
+    const newUser = {
+      firstname: 'Test',
+      lastname: 'Test',
+      email: 'test@example.com',
+      password: 'password',
+      role: 'user',
+    };
     const req = {
       body: newUser,
       cookies: {},
@@ -121,8 +124,16 @@ describe('signup', () => {
   });
 
   it('should handle email already registered', async () => {
+    const user = {
+      firstname: 'Test',
+      lastname: 'Test',
+      email: 'test@example.com',
+      password: 'password',
+      role: 'user',
+    };
+
     const req = {
-      body: newUser,
+      body: user,
       cookies: {},
     };
     const res = {
@@ -131,7 +142,7 @@ describe('signup', () => {
       cookie: jest.fn(),
     };
 
-    User.findOne = jest.fn().mockResolvedValue({ email: newUser.email });
+    User.findOne = jest.fn().mockResolvedValue({ email: user.email });
 
     await auth.signup(req, res);
 
@@ -144,32 +155,34 @@ describe('signup', () => {
     });
   });
 
-  // it('should handle empty password', async () => {
-  //   const req = {
-  //     body: {
-  //       firstname: 'Test',
-  //       lastname: 'User',
-  //       email: 'test@user.com',
-  //       password: '',
-  //       role: 'user',
-  //     },
-  //     cookies: {},
-  //   };
-  //   const res = {
-  //     status: jest.fn().mockReturnThis(),
-  //     json: jest.fn(),
-  //     cookie: jest.fn(),
-  //   };
+  it('should handle empty password', async () => {
+    const req = {
+      body: {
+        firstname: 'Test',
+        lastname: 'User',
+        email: 'test@example.com',
+        password: '',
+        role: 'user',
+      },
+      cookies: {},
+    };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+      cookie: jest.fn(),
+    };
 
-  //   await auth.signup(req, res);
+    User.findOne = jest.fn().mockResolvedValue(null);
 
-  //   expect(res.status).toHaveBeenCalledTimes(1);
-  //   expect(res.status).toHaveBeenCalledWith(500);
-  //   expect(res.json).toHaveBeenCalledTimes(1);
-  //   expect(res.json).toHaveBeenCalledWith({
-  //     error: 'Need to set a password',
-  //   });
-  // });
+    await auth.signup(req, res);
+
+    expect(res.status).toHaveBeenCalledTimes(1);
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledTimes(1);
+    expect(res.json).toHaveBeenCalledWith({
+      error: 'Need to set a password',
+    });
+  });
 });
 
 describe('logout', () => {
