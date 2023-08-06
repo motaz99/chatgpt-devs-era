@@ -22,9 +22,9 @@ exports.postOrder = async (req, res) => {
       quantity,
     });
 
-    const userChef = await Chef.findById(order.chefId)
-      .populate('userId')
-      .exec();
+    const userChef = await Chef.findById(order.chefId);
+    // .populate('userId')
+    // .exec();
 
     await sendEmail(
       userChef.userId.email,
@@ -64,10 +64,10 @@ exports.chefUpdateOrderStatus = async (req, res) => {
     const token = req.cookies.jwt;
     const decodedToken = decodeJwtToken(token);
 
-    const order = await Order.findById(orderId).populate('dishId');
-    const clientUserDetails = await Client.findById(order.clientId)
-      .populate('userId')
-      .exec();
+    const order = await Order.findById(orderId); // .populate('dishId');
+    const clientUserDetails = await Client.findById(order.clientId);
+    // .populate('userId')
+    // .exec();
     if (newStatus === 'cancel') {
       if (!order) {
         throw new Error('Order not found');
@@ -84,9 +84,6 @@ exports.chefUpdateOrderStatus = async (req, res) => {
       res.status(200).json({ message: 'Order cancelled successfully' });
     }
 
-    order.status = newStatus;
-    await order.save();
-
     const chef = await Chef.findOne({ userId: decodedToken.userId });
 
     if (!order) {
@@ -96,6 +93,9 @@ exports.chefUpdateOrderStatus = async (req, res) => {
     if (order.chefId.toString() !== chef._id.toString()) {
       throw new Error('You are not authorized to update this order');
     }
+
+    order.status = newStatus;
+    await order.save();
 
     await sendEmail(
       clientUserDetails.userId.email,
@@ -117,10 +117,10 @@ exports.clientCancelOrder = async (req, res) => {
     const token = req.cookies.jwt;
     const decodedToken = decodeJwtToken(token);
     const orderId = req.params.id;
-    const order = await Order.findById(orderId)
-      .populate('chefId')
-      .populate('dishId')
-      .exec();
+    const order = await Order.findById(orderId);
+    // .populate('chefId')
+    // .populate('dishId')
+    // .exec();
     if (!order) {
       throw new Error('Order not found');
     }

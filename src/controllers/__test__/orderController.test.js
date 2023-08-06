@@ -13,82 +13,111 @@ jest.mock('../../models/dish');
 jest.mock('../../helpers/decodeJwtToken');
 jest.mock('../../helpers/sendEmail');
 
+afterEach(() => {
+  jest.clearAllMocks();
+});
+
 describe('postOrder', () => {
-  const client = {
-    _id: 'client12345',
-    userId: 'user12345',
-  };
+  it('should create a new order', async () => {
+    const req = {
+      body: {
+        dishId: 'mocked-dish-id',
+        quantity: 2,
+      },
+      cookies: {
+        jwt: 'mocked-jwt-token',
+      },
+    };
 
-  const dish = {
-    _id: 'dish12345',
-    chefId: 'chef12345',
-  };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
 
-  const decodedToken = {
-    userId: 'user12345',
-    firstname: 'Test',
-    lastname: 'Test',
-  };
+    const decodedToken = {
+      userId: 'mocked-user-id',
+      firstname: 'Mock',
+      lastname: 'User',
+    };
 
-  const expectedOrderData = {
-    clientId: client._id,
-    dishId: dish._id,
-    chefId: dish.chefId,
-    quantity: 2,
-  };
-
-  const req = {
-    body: {
-      dishId: dish._id,
-      quantity: 2,
-    },
-    cookies: {
-      jwt: 'token123',
-    },
-  };
-
-  const res = {
-    status: jest.fn().mockReturnThis(),
-    json: jest.fn(),
-  };
-
-  beforeEach(() => {
-    Client.findOne.mockClear();
-    Dish.findById.mockClear();
-    Order.create.mockClear();
     decodeJwtToken.mockReturnValue(decodedToken);
+
+    const mockClient = {
+      _id: 'mocked-client-id',
+      userId: 'mocked-user-id',
+    };
+
+    const mockDish = {
+      _id: 'mocked-dish-id',
+      chefId: 'mocked-chef-id',
+    };
+
+    const mockChef = {
+      _id: 'mocked-chef-id',
+      userId: {
+        email: 'chef@example.com',
+      },
+    };
+
+    Client.findOne.mockResolvedValue(mockClient);
+    Dish.findById.mockResolvedValue(mockDish);
+    Chef.findById.mockResolvedValue(mockChef);
+
+    const mockOrder = {
+      clientId: mockClient._id,
+      chefId: mockDish.chefId,
+      dishId: mockDish._id,
+      quantity: req.body.quantity,
+    };
+
+    Order.create.mockResolvedValue(mockOrder);
+
     sendEmail.mockResolvedValue();
-  });
-
-  //   it('should create a new order', async () => {
-  //     Client.findOne.mockResolvedValue(client);
-  //     Dish.findById.mockResolvedValue(dish);
-  //     Order.create.mockResolvedValue(expectedOrderData);
-
-  //     await orderController.postOrder(req, res);
-
-  //     expect(Client.findOne).toHaveBeenCalledTimes(1);
-  //     expect(Dish.findById).toHaveBeenCalledTimes(1);
-  //     expect(Order.create).toHaveBeenCalledTimes(1);
-  //     // expect(sendEmail).toHaveBeenCalledTimes(1);
-  //     expect(res.status).toHaveBeenCalledWith(201);
-  //     expect(res.json).toHaveBeenCalledWith({
-  //       message: 'Your order has been sent successfully',
-  //       data: expectedOrderData,
-  //     });
-  //   });
-
-  it('should handle error', async () => {
-    Client.findOne.mockResolvedValue(client);
-    Dish.findById.mockResolvedValue(dish);
-    Order.create.mockRejectedValue(new Error('Database error'));
 
     await orderController.postOrder(req, res);
 
     expect(Client.findOne).toHaveBeenCalledTimes(1);
     expect(Dish.findById).toHaveBeenCalledTimes(1);
     expect(Order.create).toHaveBeenCalledTimes(1);
-    expect(sendEmail).not.toHaveBeenCalled();
+    expect(Chef.findById).toHaveBeenCalledTimes(1);
+    expect(sendEmail).toHaveBeenCalledWith(
+      mockChef.userId.email,
+      'New order',
+      `You have new order by '${decodedToken.firstname} ${decodedToken.lastname}'`
+    );
+    expect(res.status).toHaveBeenCalledWith(201);
+    expect(res.json).toHaveBeenCalledWith({
+      message: 'Your order has been sent successfully',
+      data: mockOrder,
+    });
+  });
+
+  it('should handle errors', async () => {
+    const req = {
+      body: {
+        dishId: 'mocked-dish-id',
+        quantity: 2,
+      },
+      cookies: {
+        jwt: 'mocked-jwt-token',
+      },
+    };
+
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    decodeJwtToken.mockReturnValue({
+      userId: 'mocked-user-id',
+      firstname: 'Mock',
+      lastname: 'User',
+    });
+
+    Client.findOne.mockRejectedValue(new Error('Mocked error'));
+
+    await orderController.postOrder(req, res);
+
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.json).toHaveBeenCalledWith({
       error: 'Failed to create the order',
@@ -98,31 +127,31 @@ describe('postOrder', () => {
 
 describe('getChefOrders', () => {
   const chef = {
-    _id: 'chef12345',
+    _id: 'mocked-chef-id',
   };
 
   const decodedToken = {
-    userId: 'user12345',
+    userId: 'mocked-user-id',
   };
 
   const chefOrders = [
     {
-      _id: 'order1',
-      clientId: 'client1',
-      dishId: 'dish1',
+      _id: 'mocked-order-id',
+      clientId: 'mocked-client-id',
+      dishId: 'mocked-dish-id',
       quantity: 2,
     },
     {
-      _id: 'order2',
-      clientId: 'client2',
-      dishId: 'dish2',
-      quantity: 3,
+      _id: 'mocked-order-id',
+      clientId: 'mocked-client-id',
+      dishId: 'mocked-dish-id',
+      quantity: 1,
     },
   ];
 
   const req = {
     cookies: {
-      jwt: 'token123',
+      jwt: 'mocked-jwt-token',
     },
   };
 
@@ -131,11 +160,7 @@ describe('getChefOrders', () => {
     json: jest.fn(),
   };
 
-  beforeEach(() => {
-    Chef.findOne.mockClear();
-    Order.find.mockClear();
-    decodeJwtToken.mockReturnValue(decodedToken);
-  });
+  decodeJwtToken.mockReturnValue(decodedToken);
 
   it('should retrieve chef orders', async () => {
     Chef.findOne.mockResolvedValue(chef);
