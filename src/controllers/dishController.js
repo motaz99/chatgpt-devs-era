@@ -85,7 +85,6 @@ exports.deleteDishById = async (req, res) => {
 
     res.json({ message: 'Dish deleted successfully' });
   } catch (err) {
-    console.error(err);
     res.status(500).json({ error: 'Server error' });
   }
 };

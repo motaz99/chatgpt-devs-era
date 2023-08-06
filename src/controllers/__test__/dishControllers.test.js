@@ -37,7 +37,7 @@ describe('createDish', () => {
       rating: 4,
     };
 
-    decodeJwtToken.mockReturnValue(decodedToken); // Fix the mockReturnValue
+    decodeJwtToken.mockReturnValue(decodedToken);
     Chef.findOne.mockResolvedValue(chef);
     Dish.findOne.mockResolvedValue(dish);
     Dish.prototype.save.mockResolvedValue(savedDish);
