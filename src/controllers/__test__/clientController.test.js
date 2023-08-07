@@ -170,9 +170,57 @@ describe('updateClient', () => {
   });
 });
 
-// describe('createFavoriteDish', () => {
-//   // TEST createFavoriteDish
-// });
+/// /////////////////////////////////////////////////////////////////////////////////////////////
+
+describe('createFavoriteDish', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should return an error when an invalid dish ID is provided', async () => {
+    const mockedUserId = 'mocked-user-id';
+    const mockedClient = { userId: mockedUserId, favoriteDishes: [] };
+
+    Client.findOne.mockResolvedValue(mockedClient);
+    Dish.findById.mockResolvedValue(null);
+
+    const req = {
+      body: { dishId: 'invalid-dish-id' },
+      cookies: { jwt: 'mocked-jwt-token' },
+    };
+
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    await clientController.createFavoriteDish(req, res);
+
+    expect(mockedClient.favoriteDishes).toEqual([]);
+
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({ error: 'Dish not found' });
+  });
+
+  it('should return an error when the client does not exist', async () => {
+    Client.findOne.mockResolvedValue(null);
+
+    const req = {
+      body: { dishId: 'mocked-dish-id' },
+      cookies: { jwt: 'mocked-jwt-token' },
+    };
+
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    await clientController.createFavoriteDish(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({ error: 'Client not found' });
+  });
+});
 
 describe('getFavoriteDishes', () => {
   it('should return favorite dishes array', async () => {
@@ -224,10 +272,6 @@ describe('getFavoriteDishes', () => {
     expect(res.json).toHaveBeenCalledWith({ error: 'Server error' });
   });
 });
-
-// describe('deleteFavoriteDish', () => {
-//   // testing deleteFavoriteDish
-// });
 
 // describe('getOrderHistory', () => {
 //   // testing getOrderHistory
