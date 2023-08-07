@@ -128,7 +128,7 @@ exports.getOrderHistory = async (req, res) => {
     const decodedToken = decodeJwtToken(token);
     const client = await Client.findOne({
       userId: decodedToken.userId,
-    }).populate('orderHistory');
+    }); // .populate('orderHistory');
 
     if (!client) {
       throw new Error('Client not found');
