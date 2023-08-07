@@ -251,30 +251,7 @@ describe('getFavoriteDishes', () => {
 // });
 
 // describe('getChefById', () => {
-//   beforeEach(() => {
-//     jest.clearAllMocks();
-//   });
-
-//   it('should return chef information by ID', async () => {
-//     const req = {
-//       params: { id: 'mockChefId' },
-//     };
-
-//     const mockChef = { name: 'Test Chef', specialty: 'Italian Cuisine' };
-
-//     Chef.findById.mockResolvedValue(mockChef);
-
-//     const res = {
-//       status: jest.fn().mockReturnThis(),
-//       json: jest.fn(),
-//     };
-
-//     await chefController.getChefById(req, res);
-
-//     expect(res.status).toHaveBeenCalledWith(200);
-//     expect(Chef.findById).toHaveBeenCalledWith(req.params.id);
-//     expect(res.json).toHaveBeenCalledWith(mockChef);
-//   });
+//   // testing getChefById
 // });
 
 describe('dishesRatings', () => {
