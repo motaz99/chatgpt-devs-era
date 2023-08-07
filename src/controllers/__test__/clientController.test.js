@@ -169,9 +169,9 @@ describe('updateClient', () => {
   });
 });
 
-describe('createFavoriteDish', () => {
-  // TEST createFavoriteDish
-});
+// describe('createFavoriteDish', () => {
+//   // TEST createFavoriteDish
+// });
 
 describe('getFavoriteDishes', () => {
   it('should return favorite dishes array', async () => {
@@ -224,6 +224,30 @@ describe('getFavoriteDishes', () => {
   });
 });
 
-describe('deleteFavoriteDish', () => {
-  // testing deleteFavoriteDish
-});
+// describe('deleteFavoriteDish', () => {
+//   // testing deleteFavoriteDish
+// });
+
+// describe('getOrderHistory', () => {
+//   // testing getOrderHistory
+// });
+
+// describe('getChefs',getChefs() => {
+//   // testing getChefs
+// });
+
+// describe('getChefById',getChefs() => {
+//   // testing getChefById
+// });
+
+// describe('dishesRatings',getChefs() => {
+//   // testing dishesRatings
+// });
+
+// describe('getChefDishes',getChefs() => {
+//   // testing getChefDishes
+// });
+
+// describe('searchDish',getChefs() => {
+//   // testing searchDish
+// });
