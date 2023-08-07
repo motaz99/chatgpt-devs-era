@@ -1,4 +1,5 @@
 const clientController = require('../clientController');
+const dishController = require('../dishController');
 const decodeJwtToken = require('../../helpers/decodeJwtToken');
 const Client = require('../../models/client');
 const Dish = require('../../models/dish');
@@ -202,25 +203,38 @@ describe('getFavoriteDishes', () => {
     });
   });
 
-  it('should handle server error during retrieval', async () => {
+  it('should rate a dish successfully', async () => {
     const req = {
       cookies: { jwt: 'mockToken' },
+      params: { id: 'mockDishId' },
+      body: {
+        rating: 4,
+      },
     };
 
     const decodedToken = { userId: 'mockUserId' };
+    const dish = {
+      _id: 'mockDishId',
+      ratings: [],
+      save: jest.fn(), // Mock the save function
+    };
+
+    // Use jest.spyOn() to mock the Dish model's findById method
+    const findByIdMock = jest.spyOn(Dish, 'findById');
+    findByIdMock.mockResolvedValue(dish);
 
     decodeJwtToken.mockReturnValue(decodedToken);
-    Client.findOne.mockRejectedValue(new Error('Mock server error'));
 
     const res = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
     };
 
-    await clientController.getFavoriteDishes(req, res);
+    await clientController.dishesRatings(req, res);
 
-    expect(res.status).toHaveBeenCalledWith(500);
-    expect(res.json).toHaveBeenCalledWith({ error: 'Server error' });
+    expect(res.status).toHaveBeenCalledWith(201);
+    expect(findByIdMock).toHaveBeenCalledWith('mockDishId');
+    expect(res.json).toHaveBeenCalledWith('Dish Rated Successfully');
   });
 });
 
@@ -236,13 +250,67 @@ describe('getFavoriteDishes', () => {
 //   // testing getChefs
 // });
 
-// describe('getChefById',getChefs() => {
-//   // testing getChefById
+// describe('getChefById', () => {
+//   beforeEach(() => {
+//     jest.clearAllMocks();
+//   });
+
+//   it('should return chef information by ID', async () => {
+//     const req = {
+//       params: { id: 'mockChefId' },
+//     };
+
+//     const mockChef = { name: 'Test Chef', specialty: 'Italian Cuisine' };
+
+//     Chef.findById.mockResolvedValue(mockChef);
+
+//     const res = {
+//       status: jest.fn().mockReturnThis(),
+//       json: jest.fn(),
+//     };
+
+//     await chefController.getChefById(req, res);
+
+//     expect(res.status).toHaveBeenCalledWith(200);
+//     expect(Chef.findById).toHaveBeenCalledWith(req.params.id);
+//     expect(res.json).toHaveBeenCalledWith(mockChef);
+//   });
 // });
 
-// describe('dishesRatings',getChefs() => {
-//   // testing dishesRatings
-// });
+describe('dishesRatings', () => {
+  it('should rate a dish successfully', async () => {
+    const req = {
+      cookies: { jwt: 'mockToken' },
+      params: { id: 'mockDishId' },
+      body: {
+        rating: 4,
+      },
+    };
+
+    const decodedToken = { userId: 'mockUserId' };
+    const dish = {
+      _id: 'mockDishId',
+      ratings: [],
+      save: jest.fn(),
+    };
+
+    const findByIdMock = jest.spyOn(Dish, 'findById');
+    findByIdMock.mockResolvedValue(dish);
+
+    decodeJwtToken.mockReturnValue(decodedToken);
+
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    await clientController.dishesRatings(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(201);
+    expect(findByIdMock).toHaveBeenCalledWith('mockDishId');
+    expect(res.json).toHaveBeenCalledWith('Dish Rated Successfully');
+  });
+});
 
 // describe('getChefDishes',getChefs() => {
 //   // testing getChefDishes
