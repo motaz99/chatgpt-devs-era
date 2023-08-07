@@ -22,7 +22,7 @@ exports.createClient = async (req, res) => {
       contactNumber,
     });
 
-    res.status(200).redirect('/api/clients/chefs');
+    res.status(201).redirect('/api/clients/chefs');
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -97,7 +97,7 @@ exports.getFavoriteDishes = async (req, res) => {
       .status(200)
       .json({ message: 'Favorite Dishes array', data: favoriteDishes });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: 'Server error' });
   }
 };
 
