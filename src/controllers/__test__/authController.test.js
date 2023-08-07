@@ -1,6 +1,11 @@
 const bcrypt = require('bcrypt');
 const User = require('../../models/User');
 const auth = require('../authController');
+const generateToken = require('../../helpers/generateToken');
+
+jest.mock('../../models/User');
+jest.mock('../../helpers/generateToken');
+jest.mock('bcrypt');
 
 afterEach(() => {
   jest.clearAllMocks();
@@ -85,42 +90,106 @@ describe('login', () => {
 });
 
 describe('signup', () => {
-  it('should create a new user', async () => {
-    const newUser = {
-      firstname: 'Test',
-      lastname: 'Test',
-      email: 'test@example.com',
-      password: 'password',
-      role: 'user',
-    };
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  // it('should create a new user', async () => {
+  //   const newUser = {
+  //     firstname: 'Test',
+  //     lastname: 'Test',
+  //     email: 'test@example.com',
+  //     password: 'password',
+  //     role: 'user',
+  //   };
+  //   const req = {
+  //     body: newUser,
+  //     cookies: {},
+  //   };
+  //   const res = {
+  //     status: jest.fn().mockReturnThis(),
+  //     json: jest.fn(),
+  //     cookie: jest.fn(),
+  //   };
+
+  //   User.findOne = jest.fn().mockResolvedValue(null);
+  //   bcrypt.hash = jest.fn().mockResolvedValue('hashedPassword123');
+  //   User.create = jest.fn().mockResolvedValue(newUser);
+
+  //   await auth.signup(req, res);
+
+  //   expect(User.findOne).toHaveBeenCalledTimes(1);
+  //   expect(bcrypt.hash).toHaveBeenCalledTimes(1);
+  //   expect(User.create).toHaveBeenCalledTimes(1);
+  //   expect(res.status).toHaveBeenCalledTimes(1);
+  //   expect(res.status).toHaveBeenCalledWith(201);
+  //   expect(res.json).toHaveBeenCalledTimes(1);
+  //   expect(res.json).toHaveBeenCalledWith({
+  //     message:
+  //       'You have signed up successfully, and now you are a logged in user',
+  //     next: `You now need to fill the ${newUser.role} information`,
+  //   });
+  //   expect(res.cookie).toHaveBeenCalledTimes(1);
+  // });
+
+  it('should create a new user and return the success message', async () => {
     const req = {
-      body: newUser,
-      cookies: {},
+      body: {
+        firstname: 'John',
+        lastname: 'Doe',
+        email: 'john.doe@example.com',
+        password: 'password123',
+        role: 'normal-user',
+      },
+      cookies: {
+        jwt: null,
+      },
     };
+
     const res = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
       cookie: jest.fn(),
     };
 
-    User.findOne = jest.fn().mockResolvedValue(null);
-    bcrypt.hash = jest.fn().mockResolvedValue('hashedPassword123');
-    User.create = jest.fn().mockResolvedValue(newUser);
+    User.findOne.mockResolvedValue(null);
+
+    const hashedPassword = 'mocked-hashed-password';
+    bcrypt.hash.mockResolvedValue(hashedPassword);
+
+    const newUser = {
+      _id: 'user_id',
+      firstname: 'John',
+      lastname: 'Doe',
+      email: 'john.doe@example.com',
+      provider: null,
+      providerId: null,
+      profilePicture: null,
+      password: hashedPassword,
+      type: 'normal-user',
+      role: 'normal-user',
+    };
+    User.create.mockResolvedValue(newUser);
+
+    const mockToken = 'mocked-token';
+    generateToken.mockReturnValue(mockToken);
 
     await auth.signup(req, res);
 
     expect(User.findOne).toHaveBeenCalledTimes(1);
     expect(bcrypt.hash).toHaveBeenCalledTimes(1);
     expect(User.create).toHaveBeenCalledTimes(1);
-    expect(res.status).toHaveBeenCalledTimes(1);
+    expect(generateToken).toHaveBeenCalledTimes(1);
     expect(res.status).toHaveBeenCalledWith(201);
-    expect(res.json).toHaveBeenCalledTimes(1);
     expect(res.json).toHaveBeenCalledWith({
       message:
         'You have signed up successfully, and now you are a logged in user',
       next: `You now need to fill the ${newUser.role} information`,
     });
-    expect(res.cookie).toHaveBeenCalledTimes(1);
+    expect(res.cookie).toHaveBeenCalledWith('jwt', mockToken, {
+      httpOnly: true,
+      maxAge: 14 * 24 * 60 * 60 * 1000,
+    });
   });
 
   it('should handle email already registered', async () => {
