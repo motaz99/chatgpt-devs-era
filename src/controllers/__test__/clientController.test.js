@@ -168,11 +168,36 @@ describe('updateClient', () => {
     expect(res.json).toHaveBeenCalledWith({ error: 'Server error' });
   });
 });
+describe('createFavoriteDish', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
 
-// describe('createFavoriteDish', () => {
-//   // TEST createFavoriteDish
-// });
+  it('should return an error when an invalid dish ID is provided', async () => {
+    const mockedUserId = 'mocked-user-id';
+    const mockedClient = { userId: mockedUserId, favoriteDishes: [] };
 
+    Client.findOne.mockResolvedValue(mockedClient);
+    Dish.findById.mockResolvedValue(null);
+
+    const req = {
+      body: { dishId: 'invalid-dish-id' },
+      cookies: { jwt: 'mocked-jwt-token' },
+    };
+
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    await clientController.createFavoriteDish(req, res);
+
+    expect(mockedClient.favoriteDishes).toEqual([]);
+
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({ error: 'Dish not found' });
+  });
+});
 describe('getFavoriteDishes', () => {
   it('should return favorite dishes array', async () => {
     const req = {
