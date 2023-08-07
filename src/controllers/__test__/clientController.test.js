@@ -5,6 +5,7 @@ const Dish = require('../../models/dish');
 
 jest.mock('../../helpers/decodeJwtToken');
 jest.mock('../../models/client');
+jest.mock('../../models/dish');
 
 const createMockReqRes = (reqBody = {}) => ({
   cookies: { jwt: 'mockToken' },
@@ -168,6 +169,9 @@ describe('updateClient', () => {
     expect(res.json).toHaveBeenCalledWith({ error: 'Server error' });
   });
 });
+
+/// /////////////////////////////////////////////////////////////////////////////////////////////
+
 describe('createFavoriteDish', () => {
   afterEach(() => {
     jest.clearAllMocks();
@@ -197,7 +201,27 @@ describe('createFavoriteDish', () => {
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.json).toHaveBeenCalledWith({ error: 'Dish not found' });
   });
+
+  it('should return an error when the client does not exist', async () => {
+    Client.findOne.mockResolvedValue(null);
+
+    const req = {
+      body: { dishId: 'mocked-dish-id' },
+      cookies: { jwt: 'mocked-jwt-token' },
+    };
+
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    await clientController.createFavoriteDish(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({ error: 'Client not found' });
+  });
 });
+
 describe('getFavoriteDishes', () => {
   it('should return favorite dishes array', async () => {
     const req = {

@@ -65,6 +65,10 @@ exports.createFavoriteDish = async (req, res) => {
     const decodedToken = decodeJwtToken(token);
     const client = await Client.findOne({ userId: decodedToken.userId });
 
+    if (!client) {
+      throw new Error('Client not found');
+    }
+
     const { dishId } = req.body;
     const dish = await Dish.findById(dishId);
 
