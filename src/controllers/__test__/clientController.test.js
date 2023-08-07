@@ -273,10 +273,6 @@ describe('getFavoriteDishes', () => {
   });
 });
 
-// describe('deleteFavoriteDish', () => {
-//   // testing deleteFavoriteDish
-// });
-
 // describe('getOrderHistory', () => {
 //   // testing getOrderHistory
 // });
