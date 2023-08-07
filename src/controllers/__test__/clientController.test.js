@@ -5,6 +5,7 @@ const Dish = require('../../models/dish');
 
 jest.mock('../../helpers/decodeJwtToken');
 jest.mock('../../models/client');
+jest.mock('../../models/dish');
 
 const createMockReqRes = (reqBody = {}) => ({
   cookies: { jwt: 'mockToken' },
@@ -244,10 +245,170 @@ describe('getFavoriteDishes', () => {
 //   // testing dishesRatings
 // });
 
-// describe('getChefDishes',getChefs() => {
-//   // testing getChefDishes
-// });
+describe('getChefDishes', () => {
+  it('should return dishes related to the chef when the chef has dishes', async () => {
+    const req = {
+      params: { id: 'mockChefUserId' },
+    };
 
-// describe('searchDish',getChefs() => {
-//   // testing searchDish
-// });
+    const chefDishes = [
+      {
+        _id: 'mockDishId1',
+        name: 'Mock Dish 1',
+        description: 'Mock Description 1',
+        price: '10',
+        rating: 4.5,
+        userId: 'mockChefUserId',
+      },
+      {
+        _id: 'mockDishId2',
+        name: 'Mock Dish 2',
+        description: 'Mock Description 2',
+        price: '15',
+        rating: 3.8,
+        userId: 'mockChefUserId',
+      },
+    ];
+
+    Dish.find.mockResolvedValue(chefDishes);
+
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    await clientController.getChefDishes(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({
+      message: 'Dishes that are related to this chef',
+      data: chefDishes,
+    });
+  });
+
+  it('should return a message when the chef has no dishes', async () => {
+    const req = {
+      params: { id: 'mockChefUserId' },
+    };
+
+    Dish.find.mockResolvedValue([]);
+
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    await clientController.getChefDishes(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({
+      message: 'Dishes that are related to this chef',
+      data: "This chef didn't add dishes yet",
+    });
+  });
+
+  it('should return an error when there is a server error', async () => {
+    const req = {
+      params: { id: 'mockChefUserId' },
+    };
+
+    Dish.find.mockRejectedValue(new Error('Mocked error'));
+
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    await clientController.getChefDishes(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({ error: 'Mocked error' });
+  });
+});
+
+describe('searchDish', () => {
+  it('should return dishes matching the search value', async () => {
+    const req = {
+      body: { value: 'Mock Dish' },
+    };
+
+    const dishes = [
+      {
+        _id: 'mockDishId1',
+        name: 'Mock Dish 1',
+        description: 'Mock Description 1',
+        price: '10',
+        rating: 4.5,
+        userId: 'mockChefUserId',
+      },
+      {
+        _id: 'mockDishId2',
+        name: 'Mock Dish 2',
+        description: 'Mock Description 2',
+        price: '15',
+        rating: 3.8,
+        userId: 'mockChefUserId',
+      },
+    ];
+
+    Dish.find.mockResolvedValue(dishes);
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+    await clientController.searchDish(req, res);
+    expect(res.json).toHaveBeenCalledWith(dishes);
+  });
+
+  it('should return a message when no dishes match the search value', async () => {
+    const req = {
+      body: { value: 'Non-existing Dish' },
+    };
+
+    Dish.find.mockResolvedValue([]);
+
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    await clientController.searchDish(req, res);
+
+    expect(res.json).toHaveBeenCalledWith('There is no such a dish name...');
+  });
+
+  it('should throw an error when no search value is provided', async () => {
+    const req = {
+      body: { value: '' },
+    };
+
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    await expect(clientController.searchDish(req, res)).rejects.toThrow(
+      'Please write a dish name to search for.'
+    );
+  });
+
+  it('should return an error when there is a server error', async () => {
+    const req = {
+      body: { value: 'Mock Dish' },
+    };
+
+    Dish.find.mockRejectedValue(new Error('Mocked error'));
+
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    await clientController.searchDish(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({
+      error: 'An error occurred while searching for dishes.',
+    });
+  });
+});
