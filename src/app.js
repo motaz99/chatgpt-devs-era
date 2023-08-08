@@ -28,11 +28,7 @@ app.get('/api-docs.json', (req, res) => {
   res.json(swaggerOptions);
 });
 
-app.use(
-  '/api-docs',
-  swaggerUi.serve,
-  swaggerUi.setup(swaggerOptions, { explorer: true })
-);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerOptions));
 
 app.use('/api', apiRoutes);
 app.get('/home-page', (req, res) => {
