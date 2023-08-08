@@ -16,7 +16,10 @@ const options = {
     },
     servers: [
       {
-        url: 'http://localhost:3000/api',
+        url:
+          process.env.NODE_ENV === 'production'
+            ? 'https://cookiz-app-fxjrs.ondigitalocean.app/api'
+            : 'http://localhost:3000/api',
       },
     ],
     components: {
