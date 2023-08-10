@@ -1,4 +1,4 @@
-const order = {
+const postOrder = {
   post: {
     tags: ['Orders'],
     summary: 'Create a new order',
@@ -18,16 +18,12 @@ const order = {
                       type: 'string',
                       example: '64adddb8ffed160fd72dc69c',
                     },
-                    chefId: {
-                      type: 'string',
-                      example: '64adddb8ffed160fd72dc69c',
-                    },
                     quantity: {
                       type: 'integer',
                       example: 2,
                     },
                   },
-                  required: ['dishId', 'chefId', 'quantity'],
+                  required: ['dishId', 'quantity'],
                 },
               },
               status: {
@@ -71,4 +67,142 @@ const order = {
   },
 };
 
-module.exports = order;
+const getChefOrders = {
+  get: {
+    tags: ['Orders'],
+    summary: 'Get orders for the chef',
+    responses: {
+      200: {
+        description: 'Successful response with orders',
+        schema: {
+          type: 'object',
+          properties: {
+            message: { type: 'string' },
+            data: {
+              type: 'array',
+              items: { $ref: '#/components/schemas/Order' },
+            },
+          },
+        },
+      },
+      500: {
+        description: 'Internal server error',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                error: {
+                  type: 'string',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+};
+
+const chefUpdateStatus = {
+  put: {
+    tags: ['Orders'],
+    summary: 'Update order status for the authenticated chef',
+    requestBody: {
+      required: true,
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              newStatus: {
+                type: 'string',
+                example: 'delivered',
+              },
+              orderId: {
+                type: 'string',
+                example: '64adddb8ffed160fd72dc69c',
+              },
+            },
+          },
+          required: ['newStatus', 'orderId'],
+        },
+      },
+    },
+  },
+  responses: {
+    200: {
+      description: 'Successful response with updated order status',
+      schema: {
+        type: 'object',
+        properties: {
+          message: { type: 'string' },
+          data: { $ref: '#/components/schemas/Order' },
+        },
+      },
+    },
+    500: {
+      description: 'Internal server error',
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              error: {
+                type: 'string',
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+};
+
+const clientCancelOrder = {
+  put: {
+    tags: ['Orders'],
+    summary: 'Cancel an order by the client',
+    parameters: [
+      { name: 'orderId', in: 'path', required: true, type: 'string' },
+      {
+        name: 'body',
+        in: 'body',
+        required: true,
+      },
+    ],
+    responses: {
+      200: {
+        description: 'Successful response after order cancellation',
+        schema: {
+          type: 'object',
+          properties: {
+            message: { type: 'string' },
+          },
+        },
+      },
+      500: {
+        description: 'Internal server error',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                error: {
+                  type: 'string',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+};
+
+module.exports = {
+  postOrder,
+  getChefOrders,
+  chefUpdateStatus,
+  clientCancelOrder,
+};

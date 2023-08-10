@@ -35,6 +35,7 @@ exports.postOrder = async (req, res) => {
       .status(201)
       .json({ message: 'Your order has been sent successfully', data: order });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: 'Failed to create the order' });
   }
 };
